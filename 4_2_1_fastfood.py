@@ -1,66 +1,66 @@
 import time
 
-menu = {1:['Vanlig burgare',25,0,1],
-        2:['Ostburgare',39,0,1],
-        3:['Dubbelburgare',55,0,1],
-        4:['Varmkorv',20,0,2],
+menu = {1:['Hamburger',25,0,1],
+        2:['Cheeseburger',39,0,1],
+        3:['Doubleburger',55,0,1],
+        4:['Hotdog',20,0,2],
         5:['Pizza Margherita',100,0,3],
         6:['Pizza Vesuvio',110,0,3],
         7:['Pizza Funghi',110,0,3],
-        8:['Kebab pizza',125,0,4],
+        8:['Pizza Kebab',125,0,4],
         9:['Pizza Salami',135,0,3],
-        10:['Falafel-talrik',95,1,5],
-        11:['Lövbiff',130,2,6],
-        12:['Kycklingspett',110,0,0],
+        10:['Falafel',95,1,5],
+        11:['Cube Steak',130,2,6],
+        12:['Chicken Skewer',110,0,0],
         13:['Schnitzel',120,3,0],
         14:['Chicken Nuggets',95,4,0],
-        15:['Grillad Kyckling',115,5,0],
-        16:['Vego sallad',100],
-        17:['Bönburrito',90],
-        18:['Bön-bowl',110]}
+        15:['Grilled Chicken',115,5,0],
+        16:['Vegetarian Salad',100],
+        17:['Bean Burrito',90],
+        18:['Bean Bowl',110]}
 
-required = {1:['ris','pommes frites',0],
-            2:['bearnaisesås','vitlökssås','vitlökssmör',0],
-            3:['remouladsås','majonäs',0],
-            4:['sweet and sour dipp','BBQ dipp','taco dipp','vitlök dipp','Szechuan dipp',0],
-            5:['pommes frites','potatismos',0]}
+required = {1:['rice','french fries',0],
+            2:['bearnaise sauce','garlic sauce','garlic butter',0],
+            3:['remoulade','mayonnaise',0],
+            4:['sweet and sour dip','BBQ dip','taco dip','garlic dip','szechuan dip',0],
+            5:['french fries','mashed potatoes',0]}
 
-custom = {1:['gurka',0,'ketchup/senap',0],
-          2:['ketchup',0,'senap',0,'rostad lök',5,'räksallad',15],
-          3:['jalapeno',10,'extra ost',10,'bacon',10,'oliver',10,'extra kebab',25,'extra skinka',25],
-          4:['vit sås',0,'röd sås',0,'jalapeno',10,'extra ost',10,'bacon',10,'oliver',10,'extra kebab',25,'extra skinka',25],
-          5:['röd sås',0,'vit sås',0,'lök',0],
-          6:['extra lövbit',50]}
+custom = {1:['pickles',0,'ketchup/mustard',0],
+          2:['ketchup',0,'mustard',0,'fried onions',5,'shrimp salad',15],
+          3:['jalapeno',10,'extra cheese',10,'bacon',10,'olives',10,'extra kebab',25,'extra ham',25],
+          4:['vhite sauce',0,'red sauce',0,'jalapeno',10,'extra cheese',10,'bacon',10,'olives',10,'extra kebab',25,'extra ham',25],
+          5:['red sauce',0,'white sauce',0,'onions',0],
+          6:['extra steak',50]}
 
 receipt = []
 
-print('====VÄLKOMMEN TILL KODAR-KRUBB====')
+print('====WELCOME TO BIT-BITES====')
 while True:
-    print('____Meny____')
+    print('____Menu____')
     for item in menu.keys():
-        print(f'{item}: {menu[item][0]}: {menu[item][1]} kronor')
-    opt = input('Skriv nummer för önskad matträtt eller betala för att avsluta beställning: ').lower()
+        print(f'{item}: {menu[item][0]}: {menu[item][1]} sek')
+    opt = input("Input desired item # or 'pay' to finish order: ").lower()
     if opt.isnumeric():
         opt = int(opt)
         if opt in menu.keys():
-            if 'burgare' in menu[opt][0].lower():
-                veggie = input('Önskas vegetariskt alternativ?(j/n) ').lower()
-                if veggie == 'j':
-                    receipt.extend([f'{menu[opt][0]} (vegetarisk)',menu[opt][1]])
-            elif 'pizza' in menu[opt][0].lower() and int(time.strftime("%H", time.localtime())) in [11,12]:
-                    if 'kebab' in menu[opt][0].lower():
-                        receipt.extend([menu[opt][0],menu[opt][1]-15])
+            if 'burger' in menu[Opt][0].lower():
+                veggie = input('Vegetarian option?(y/n) ').lower()
+                if veggie == 'y':
+                    receipt.extend([f'{menu[Opt][0]} (vegetarisk)',menu[Opt][1]])
+            elif 'pizza' in menu[Opt][0].lower() and int(time.strftime("%H", time.localtime())) in [11,12]:
+                    if 'kebab' in menu[Opt][0].lower():
+                        receipt.extend([menu[Opt][0],menu[Opt][1]-15])
                     else:
-                        receipt.extend([menu[opt][0],menu[opt][1]-20])
+                        receipt.extend([menu[Opt][0],menu[Opt][1]-20])
             else:
-                receipt.extend([menu[opt][0],menu[opt][1]])
-            if menu[opt][2] != 0:
-                category = required[menu[opt][2]]
+                receipt.extend([menu[Opt][0],menu[Opt][1]])
+            if menu[Opt][2] != 0:
+                category = required[menu[Opt][2]]
                 selecting = True
                 extra_dip = False
                 while True:
                     option = 0
-                    print('Välj tillbehör bland',end='')
+                    print('Choose a side among',end='')
                     while option < len(category)-1:
                         print(f' ({option+1}){category[option]}',end='')
                         if option == len(category)-2:
@@ -73,35 +73,35 @@ while True:
                         option = 0
                         while option < len(category)-1:
                             if int(selection)-1 == option:
-                                if extra_dip == 'j':
-                                    receipt.extend([f' - m. {category[option]} (extra)',category[-1]+5])
+                                if extra_dip == 'y':
+                                    receipt.extend([f' - w. {category[option]} (extra)',category[-1]+5])
                                 else:
-                                    receipt.extend([f' - m. {category[option]}',category[-1]])
+                                    receipt.extend([f' - w. {category[option]}',category[-1]])
                                 selecting = False
                                 break
                             option += 1
                         if 'nugget' in menu[opt][0].lower():
-                            extra_dip = input('Önskas extra dipp för 5 kr?(j/n) ').lower()
-                    if extra_dip == 'j':
+                            extra_dip = input('Would you like an extra dip for 5 sek?(y/n) ').lower()
+                    if extra_dip == 'y':
                         continue
                     if not selecting:
                         break
-                    print('Felakting inmatning.')
+                    print('Unexpected input.')
             if menu[opt][3] != 0:
                 category = custom[menu[opt][3]]
                 option = 0
                 while option < len(category):
-                    addon = input(f'Önskas {category[option]} för {category[option+1]} kr extra?(j/n) ').lower()
-                    if addon == 'j':
-                        receipt.extend([f' - m. {category[option]}',category[option+1]])
+                    addon = input(f'Would you like to add {category[option]} for {category[option+1]} sek extra?(y/n) ').lower()
+                    if addon == 'y':
+                        receipt.extend([f' - w. {category[option]}',category[option+1]])
                     option += 2
-    elif opt == 'betala':
+    elif opt == 'pay':
         break
 
 item = 0
 price = 0
 while item < len(receipt):
-    print(f'{receipt[item]}: {receipt[item+1]} kr')
+    print(f'{receipt[item]}: {receipt[item+1]} sek')
     price += receipt[item+1]
     item += 2
-print(f'Total kostnad {price} kr')
+print(f'Total price {price} sek')
