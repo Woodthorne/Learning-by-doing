@@ -2,7 +2,7 @@
 #   We have been tasked with building a booking
 #   system for a leisure center (with menu and
 #   everything). In the leisure center are 3
-#   bowling areas, 5 badminton areas, and 3
+#   bowling areas, 5 badminton areas, and 4
 #   tennis areas.
 #
 #   Each area can be booked for an hour at a time
@@ -20,11 +20,14 @@ for sports in range(1,4):
     locales[sports] = {}
     for time in range(9,22):
         locales[sports][time] = {}
-        if sports in [1,3]:
+        if sports == 1:
             for slots in range(1,4):
                 locales[sports][time][slots] = 0
-        else:
+        elif sports == 2:
             for slots in range(1,6):
+                locales[sports][time][slots] = 0
+        else:
+            for slots in range(1,5):
                 locales[sports][time][slots] = 0
 
 #   Main loop of the menu. Takes an input of desired sport followed
