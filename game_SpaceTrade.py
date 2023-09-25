@@ -177,7 +177,10 @@ def main():
         else:
             active_player += 1
         if active_player not in dict_players.keys():
-            active_player = 'bot'
+            if 'bot' in dict_players.keys():
+                active_player = 'bot'
+            else:
+                active_player = 1
         if active_player == 'bot':
             victory = bot_turn(active_player, victory_condition)
         else:
