@@ -104,6 +104,7 @@ def bot_turn(player, victory_condition):
             cargo.append(item)
             market_goods.remove(item)
             buying.append(item)
+    supply_goods.extend(market_goods)
     print(f'{player.capitalize()} buys',end=' ')
     for item in buying:
         print(item,end=' ')
