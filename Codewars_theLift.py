@@ -1,3 +1,8 @@
+# My solution for the kata The Lift from codewars.com
+# Full kata link: https://www.codewars.com/kata/58905bfa1decb981da00009e/python
+# Added ability to generate random floorplan as well, due to misunderstanding
+# the task initially.
+
 import random
 
 class Lift:
