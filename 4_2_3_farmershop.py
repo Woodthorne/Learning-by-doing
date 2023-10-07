@@ -68,8 +68,8 @@ while True:
                             inventory[opt][4] += qty
                             orders_all[order_id].extend([opt,qty,qty*inventory[opt][1]])
                             break
-                else:
-                    input('Felaktig inmatning. ENTER för att fortsätta.')
+                    else:
+                        input('Felaktig inmatning. ENTER för att fortsätta.')
             else:
                 input('Felaktig inmatning. ENTER för att fortsätta.')
 
