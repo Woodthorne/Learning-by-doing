@@ -43,7 +43,7 @@ while True:
         quit()
     elif opt in [1,2,3]:
         slot = input('(Input desired time between 9 and 21: ')
-        if slot.isnumeric():
+        if slot.isnumeric() and int(slot) in locales[opt].keys():
             slot = int(slot)
             for course in locales[opt][slot]:
                 if locales[opt][slot][course] == 0 and not booked:
