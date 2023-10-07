@@ -44,15 +44,15 @@ while True:
                 break
             elif opt.isnumeric() and int(opt) in inventory.keys():
                 opt = int(opt)
-                if inventory[opt][0] in specials.keys():
-                    print(f'RABATT: {specials[inventory[opt][0]][0]} för {specials[inventory[opt][0]][1]}')
-                if inventory[opt][2] == 'kg':
-                    print(f'Hur många kg {inventory[opt][0]} (max {inventory[opt][3]}) vill du lägga till i beställningen? ',end='')
-                else:
-                    print(f'Hur många {inventory[opt][0]} (max {inventory[opt][3]}) vill du lägga till i beställningen? ',end='')
-                qty = input()
-                if qty.isnumeric():
-                    while True:
+                while True:
+                    if inventory[opt][0] in specials.keys():
+                        print(f'RABATT: {specials[inventory[opt][0]][0]} för {specials[inventory[opt][0]][1]}')
+                    if inventory[opt][2] == 'kg':
+                        print(f'Hur många kg {inventory[opt][0]} (max {inventory[opt][3]}) vill du lägga till i beställningen? ',end='')
+                    else:
+                        print(f'Hur många {inventory[opt][0]} (max {inventory[opt][3]}) vill du lägga till i beställningen? ',end='')
+                    qty = input()
+                    if qty.isnumeric():
                         qty = int(qty)
                         if qty > inventory[opt][3]:
                             input('Otillräcklig mängd i lager. ENTER för att fortsätta.')
