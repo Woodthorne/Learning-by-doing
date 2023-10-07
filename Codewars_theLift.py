@@ -110,7 +110,7 @@ def setup():
             sample_building()
             break
         else:
-            print(error_dict('choice'))
+            print(error_dict['choice'])
     input('Lift is ready to run. Press [ENTER]...')
 
 def random_building():
@@ -163,8 +163,9 @@ def main():
         push_buttons(lift.get_floor())
         end = all_done()
         lift.move(end)
+    print('Queues at end of simulation:',queues)
+    print('Lift movements during simulation:',lift._log)
 
-main()
 
-print('Queues at end of simulation:',queues)
-print('Lift movements during simulation:',lift._log)
+if __name__ == '__main__':
+    main()
