@@ -1,6 +1,5 @@
-# This program extracts particular data from a file.
-# Made as part of a repetition lecture.
-# Pairs with file "file_to_separate.txt"
+# This program extracts particular data from a file. Made as part
+# of a repetition lecture. Pairs with file "file_to_separate.txt"
 
 import os
 
