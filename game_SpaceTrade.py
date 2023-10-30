@@ -170,7 +170,7 @@ def main():
     start_game()
     active_player = 0
     victory = False
-    victory_condition = 10
+    victory_condition = 20
     while not victory:
         if active_player == 'bot':
             active_player = 1
