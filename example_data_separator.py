@@ -1,3 +1,6 @@
+# This program extracts particular data from a file.
+# Made as part of a repetition lecture.
+
 import os
 
 def extract_data(filename) -> list:
