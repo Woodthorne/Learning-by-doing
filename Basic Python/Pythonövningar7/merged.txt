@@ -1,0 +1,5 @@
+Det här är texten i fil 10
+--------------SEPARATING LINE----------------
+Det är är innfhållft i fil 2
+--------------SEPARATING LINE----------------
+dftta är fil 3

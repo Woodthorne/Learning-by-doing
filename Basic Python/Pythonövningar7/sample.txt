@@ -1,0 +1,4 @@
+10. En rad tfxt
+2. En till rad tfxt
+3. En till fn till rad tfxt
+4. Tfstar att skriva fn till rad

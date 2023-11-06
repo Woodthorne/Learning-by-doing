@@ -1,0 +1,4 @@
+En rad tfxt
+En till rad tfxt
+En till fn till rad tfxt
+Tfstar att skriva fn till rad

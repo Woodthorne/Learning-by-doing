@@ -1,0 +1,1 @@
+print('Jag heter \n D \n a \n n \n i \n e \n l')
