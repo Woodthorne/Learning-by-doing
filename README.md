@@ -5,3 +5,4 @@ While I endeavour to make everything readable in english, some things might star
 
 ## Table of contents
 * Basic Python: Various exercises done as part of a school course.
+    * Pythonövningar(num): All exercises done as part of the course. Initial upload in swedish. Translation into english is unlikely unless specifically asked for, as I want to preserve this code as much as possible.
