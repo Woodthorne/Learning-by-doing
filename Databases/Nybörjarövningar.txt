@@ -1,0 +1,29 @@
+# 1.
+SELECT CompanyName ,Country  FROM Suppliers s ;
+
+# 2.
+SELECT Description  FROM Categories c ;
+
+# 3.
+SELECT SUM(UnitsInStock)  FROM Products p ;
+
+# 4.
+SELECT OrderDate  FROM Orders o ;
+
+# 5.
+SELECT * FROM Products p WHERE 10 < UnitPrice < 100;
+
+# 6.
+SELECT DISTINCT City  FROM Customers c ;
+
+# 7.
+SELECT * FROM Orders o ORDER BY OrderDate DESC LIMIT 10;
+
+# 8.
+SELECT DISTINCT ContactTitle  FROM Customers c ;
+
+# 9.
+SELECT * FROM Products p WHERE Discontinued = 1;
+
+# 10.
+SELECT COUNT(CustomerID), Country  FROM Customers c GROUP BY Country ;
