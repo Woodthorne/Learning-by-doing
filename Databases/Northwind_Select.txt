@@ -1,0 +1,45 @@
+# 1.1
+SELECT *  FROM Customers c ORDER BY CompanyName ASC ;
+SELECT *  FROM Customers c ORDER BY CompanyName DESC ;
+
+# 1.2
+SELECT CompanyName ,Address ,PostalCode  FROM Customers c ;
+
+# 1.3
+SELECT Address ,PostalCode ,ContactName  FROM Customers c WHERE City = 'London' ;
+
+# 1.4
+SELECT *  FROM Customers c WHERE ContactName = 'John Steel' ;
+
+# 1.5
+SELECT DISTINCT City  FROM Customers c ;
+
+# 1.6
+SELECT CompanyName ,Address ,PostalCode ,ContactName  FROM Customers c ORDER BY PostalCode ASC ;
+
+# 1.7
+SELECT CompanyName ,Address ,PostalCode ,ContactName  FROM Customers c ORDER BY PostalCode DESC ;
+
+# 1.9
+SELECT *  FROM Customers c WHERE City in ('London', 'Paris');
+
+# 1.10
+SELECT COUNT(*) FROM Customers c ;
+
+# 1.11
+SELECT *  FROM Customers c WHERE Region is NULL;
+
+# 1.12
+SELECT CompanyName ,City ,ContactName  FROM Customers c WHERE CompanyName != 'Ernst Handel';
+
+# 1.13
+SELECT * FROM Customers c WHERE Region in ('BC', 'SP', 'WA', 'CA');
+
+# 1.14
+SELECT COUNT(*) FROM Employees e WHERE Country = 'UK'
+# Ans: 4
+
+# 1.15
+SELECT * FROM Customers c
+WHERE (CompanyName = 'Island Trading' and Region = 'Isle of Wight')
+OR (CompanyName = 'White Clover Markets' and Region = 'WA');
