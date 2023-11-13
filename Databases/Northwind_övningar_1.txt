@@ -1,6 +1,5 @@
 # 1.1
 SELECT *  FROM Customers c ORDER BY CompanyName ASC ;
-SELECT *  FROM Customers c ORDER BY CompanyName DESC ;
 
 # 1.2
 SELECT CompanyName ,Address ,PostalCode  FROM Customers c ;
