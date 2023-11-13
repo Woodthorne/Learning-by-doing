@@ -1,0 +1,105 @@
+# 1.1
+SELECT c.CompanyName, c.CustomerID, o.OrderID, o.OrderDate, o.ShippedDate FROM Customers c
+INNER JOIN Orders o ON c.CustomerID = o.CustomerID;
+
+# 1.2
+SELECT c.CompanyName, c.Address, c.City, c.PostalCode FROM Customers c
+INNER JOIN Orders o ON c.CustomerID = o.CustomerID
+WHERE o.OrderDate < '1998-01-31';
+
+# 1.3
+SELECT p.UnitPrice, p.ProductName, s.CompanyName FROM Products p
+JOIN Suppliers s ON p.SupplierID = s.SupplierID
+WHERE UnitPrice > 8;
+
+# 1.4
+SELECT ProductName FROM Products p
+join `Order Details` od on od.ProductID = p.ProductID 
+WHERE od.OrderID = 10287;
+
+# 1.5
+SELECT p.ProductName, s.CompanyName FROM Products p
+join Suppliers s on p.SupplierID = s.SupplierID 
+WHERE p.SupplierID = 1;
+
+# 1.6
+SELECT c.CompanyName, c.Address, c.City, c.PostalCode, p.ProductName, od.Quantity FROM Customers c
+join Orders o on c.CustomerID = o.CustomerID 
+join `Order Details` od on o.OrderID = od.OrderID
+join Products p on p.ProductID = od.ProductID 
+WHERE c.CompanyName = 'Alfreds Futterkiste';
+
+# 1.7
+SELECT count(*) FROM Suppliers s 
+join Products p on s.SupplierID = p.SupplierID 
+WHERE ProductName LIKE '%berry%';
+
+# 1.8
+SELECT count(*) as Orderrader, sum(od.Quantity) as Sålda FROM `Order Details` od 
+join Products p on od.ProductID = p.ProductID 
+WHERE ProductName = 'Chai'
+
+# 1.9
+SELECT DISTINCT s.CompanyName  FROM Suppliers s 
+join Products p on s.SupplierID = p.SupplierID 
+join Categories c on p.CategoryID = c.CategoryID 
+WHERE s.Country = 'USA' and c.CategoryName = 'Condiments';
+
+# 1.10
+SELECT c.CategoryName, p.ProductName, p.UnitPrice, s.CompanyName FROM Products p 
+join `Order Details` od on p.ProductID = od.ProductID
+join Orders o on od.OrderID = o.OrderID
+join Suppliers s on p.SupplierID = s.SupplierID 
+join Categories c on p.CategoryID = c.CategoryID 
+WHERE '1998-01-31 23:59:59:999' < OrderDate and OrderDate < '1998-03-01 00:00:00.000'
+ORDER BY c.CategoryName;
+
+# 1.11
+SELECT DISTINCT s.* FROM Suppliers s 
+join Products p on s.SupplierID = p.SupplierID 
+WHERE p.UnitPrice > 8 and s.City = 'London';
+
+# 1.12
+SELECT DISTINCT s.* FROM Suppliers s 
+join Products p on s.SupplierID = p.SupplierID 
+join `Order Details` od on p.ProductID = od.ProductID 
+join Orders o on od.OrderID = o.OrderID 
+WHERE s.CompanyName LIKE 'a%' and YEAR(o.OrderDate) = 1998 and MONTH(o.OrderDate) = 2;
+
+# 1.13
+SELECT c.CompanyName, o.OrderDate  FROM Products p
+join `Order Details` od on p.ProductID = od.ProductID 
+join Orders o on od.OrderID = o.OrderID 
+join Customers c ON o.CustomerID = c.CustomerID 
+WHERE p.ProductName = 'Inlagd Sill'
+
+# 1.14
+SELECT c.CategoryName, COUNT(*) FROM Products p 
+join Categories c on p.CategoryID = c.CategoryID 
+GROUP BY CategoryName 
+
+# 1.15
+SELECT COUNT(*) FROM Shippers s 
+join Orders o on s.ShipperID = o.ShipVia 
+WHERE s.CompanyName = 'United Package' and o.ShipCountry = 'Sweden' and YEAR(o.OrderDate) = 1998
+
+# 1.16
+SELECT c.CompanyName, c.Address, CONCAT(c.City, c.PostalCode) as Postadress, CONCAT(s.CompanyName,'-', p.ProductName) as Produktinformaiton FROM Customers c 
+JOIN Orders o ON c.CustomerID = o.CustomerID 
+JOIN `Order Details` od ON o.OrderID = od.OrderID 
+JOIN Products p ON od.ProductID = p.ProductID 
+JOIN Suppliers s ON p.SupplierID = s.SupplierID 
+WHERE c.CompanyName = 'Ernst Handel'
+
+# 1.17
+SELECT SUM(od.Quantity) FROM Products p 
+JOIN `Order Details` od ON p.ProductID = od.ProductID 
+JOIN Orders o ON od.OrderID = o.OrderID 
+WHERE p.ProductName = 'Queso Cabrales' and YEAR(o.OrderDate) = 1997 AND MONTH(o.OrderDate) = 2;
+
+# 1.18
+SELECT DISTINCT s.CompanyName, CONCAT(s.Address,' ', s.PostalCode,' ', s.City) as Postadress FROM Suppliers s 
+JOIN Products p on s.SupplierID = p.SupplierID 
+JOIN `Order Details` od on p.ProductID = od.ProductID 
+JOIN Orders o on od.OrderID = o.OrderID 
+WHERE s.CompanyName LIKE 'b%' and YEAR(o.OrderDate) = 1998
