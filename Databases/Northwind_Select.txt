@@ -43,3 +43,52 @@ SELECT COUNT(*) FROM Employees e WHERE Country = 'UK'
 SELECT * FROM Customers c
 WHERE (CompanyName = 'Island Trading' and Region = 'Isle of Wight')
 OR (CompanyName = 'White Clover Markets' and Region = 'WA');
+
+# 2.1
+INSERT INTO Customers (CustomerID, CompanyName, ContactName, Address, City, PostalCode)
+VALUES ('SYAB','Systementor AB','Stefan Holmberg','Testgatan 12','Nacka','11222');
+
+# 2.2
+INSERT INTO Customers (CustomerID, CompanyName, ContactName, Address, City, PostalCode)
+VALUES ('DJIF','Djurgårdens IF','Anna Persson','Johanneshov','Stockholm','11122',;
+
+# 2.3
+INSERT INTO Customers (CompanyName, Address, City, ContactName, CustomerID)
+VALUES ('Elgiganten','Sicka Köpkvarter','Nacka','Malin Larsson','ELSK');
+
+# 2.5
+# Won't work due to missing CompanyName
+INSERT INTO Customers (CustomerID)
+VALUES ('TEST');
+
+# 3.1
+UPDATE Customers
+SET ContactTitle = 'Program Manager'
+WHERE CompanyName = 'Systementor AB';
+
+# 3.2
+UPDATE Customers 
+SET Region = 'SO'
+WHERE CompanyName = 'Djurgårdens IF';
+
+# 3.3
+UPDATE Customers
+SET PostalCode = '19874', Region = 'KU'
+WHERE CompanyName = 'Elgiganten';
+
+# 3.4
+UPDATE Customers 
+SET Country = 'Sweden'
+WHERE CustomerID IN ('DJIF','ELSK','SYAB');
+
+# 4.1
+DELETE FROM Customers WHERE CustomerID = 'ELSK';
+
+# 4.2
+DELETE FROM Customers WHERE CompanyName = 'Systementor AB';
+
+# 4.3
+DELETE FROM Customers WHERE City = 'Stockholm';
+
+# Test
+SELECT * FROM Customers c WHERE Country = 'Sweden';
