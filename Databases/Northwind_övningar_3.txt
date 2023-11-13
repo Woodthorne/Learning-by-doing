@@ -1,0 +1,33 @@
+# 1.1
+SELECT * FROM Customers c WHERE Region is NULL;
+
+# 1.2
+SELECT * FROM Customers c WHERE Region is NOT NULL;
+
+# 1.3
+SELECT CompanyName, IFNULL(Region, 'Region saknas') FROM Customers c;
+
+# 1.4
+SELECT CONCAT(City,'-',PostalCode) as Postadress FROM Customers c ;
+
+# 1.5
+SELECT ProductName FROM Products p WHERE UnitsInStock = 0;
+
+# 1.6
+SELECT * FROM Customers c WHERE SUBSTRING(ContactName,1,1)='J';
+
+# 1.7
+SELECT * FROM Customers c WHERE CompanyName LIKE '%market%';
+
+# 1.8
+SELECT * FROM Customers c WHERE Address LIKE '%blvd.';
+
+# 1.9
+SELECT * FROM Customers c WHERE City = 'Berlin' OR City = 'Madrid' OR City = 'Paris';
+SELECT * FROM Customers c WHERE City in ('Berlin','Madrid','Paris');
+
+# 1.10
+SELECT LEFT (OrderDate, 7) AS Ordermånad FROM Orders o;
+
+# 1.11
+SELECT CompanyName, CONCAT(Country, ' ', Region) as Landregion FROM Suppliers s WHERE CompanyName LIKE '%ltd%';
