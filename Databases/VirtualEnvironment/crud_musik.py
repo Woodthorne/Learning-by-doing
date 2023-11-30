@@ -38,7 +38,7 @@ def run():
             os.system('cls')
             print('1. Add artist')
             print('2. Add song')
-            print('2. Add album')
+            print('3. Add album')
             print('0. Quit')
             opt = input('>>> ')
             if opt == '0':
@@ -46,7 +46,7 @@ def run():
             elif opt == '1':
                 artist = Artist()
                 artist.name = input('Name the artist: ')
-                artist.birth_year = int(input('Input date of birth of artist: '))
+                artist.birth_year = int(input('Input date of birth: '))
                 db.session.add(artist)
                 db.session.commit()
             elif opt == '2':
@@ -64,7 +64,12 @@ def run():
                     db.session.commit()
                 except:
                     print('No artist with that id.')
-
+            elif opt == '3':
+                album = Album()
+                album.name = input('Name the album: ')
+                album.release_year = int(input('Input year of release: '))
+                db.session.add(album)
+                db.session.commit()
 
 if __name__ == '__main__':
     run()
