@@ -1,0 +1,12 @@
+LightOn
+LightOff
+LightSwitch
+LightSwitch
+LightSwitch
+LightSwitch
+LightSwitch
+LightSwitch
+LightSwitch
+LightSwitch
+LightOn
+LightOn
