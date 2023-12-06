@@ -8,6 +8,7 @@ class BrightnessError(Exception):
 class DarknessError(Exception):
     pass
 
+
 class Receiver:
     def perform_action(self):
         print('Action performed in receiver.')
@@ -86,6 +87,7 @@ class LightSwitch(Command):
 
     def __str__(self) -> str:
         return 'LightSwitch'
+
 
 def dump_log(log:list[Command]):
     filename = f'commandlog_{datetime.now().strftime("%Y%m%d%H%M%S")}.txt'
