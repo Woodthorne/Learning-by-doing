@@ -1,7 +1,9 @@
 import os
-from abc import ABC, abstractmethod
+from abc import ABC
 from datetime import datetime
 
+
+## New errors
 class BrightnessError(Exception):
     pass
 
@@ -9,20 +11,21 @@ class DarknessError(Exception):
     pass
 
 
+## Base classes
 class Receiver:
     def perform_action(self):
         print('Action performed in receiver.')
 
 
 class Command(ABC):
-    def __init__(self, receiver: object) -> None:
+    def __init__(self, receiver: Receiver) -> None:
         self.receiver = receiver
     
     def process(self):
-        pass
+        self.receiver.perform_action()
     
-    def __str__(self) -> str:
-        return 'Command'
+    # def __str__(self) -> str:
+    #     return 'Command'
 
 
 class Invoker:
@@ -33,6 +36,7 @@ class Invoker:
         self.cmd.process()
 
 
+## Lightswitches example
 class Light:
     def __init__(self) -> None:
         self.shining = False
