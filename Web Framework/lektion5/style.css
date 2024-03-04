@@ -1,0 +1,10 @@
+.helloworld {
+    width: fit-content;
+    color: blue;
+    border: 1px solid black;
+}
+
+.helloworld:hover {
+    color: green;
+    font-size: 50px;
+}
