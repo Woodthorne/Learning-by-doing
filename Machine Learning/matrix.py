@@ -83,7 +83,7 @@ if __name__ == '__main__':
     B = create_random_matrix(int(input('Matrix B row amount: ')),int(input('Matrix B column amount: ')))
     show_initial = None
     while show_initial not in ['y', 'n']:
-        show_initial = input('Matrices A, B? (y/n) ').lower()
+        show_initial = input('Show matrices A, B? (y/n) ').lower()
     start = datetime.now()
     C = multiply_matrices(A, B)
 
