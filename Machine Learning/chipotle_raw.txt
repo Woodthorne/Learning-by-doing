@@ -1,0 +1,30 @@
+2.03.1			Person	Chicken	235.5	Store 1
+2.00.2		0.03.8	Person	Chicken	235.6	
+	2.00.5	0.03.5	Online	Chicken	234	
+1.14.2			Online	Carnitas	235.4	
+	2.05.6	0.04.9	Person	Carnitas	233.6	
+1.14.5			Person	Chicken	234.2	
+	1.09.9	0.04.1	Online	Chicken	233	
+1.07.9			Online	Chicken	230.8	
+	2.00.6	0.03.4	Person	Carnitas	232.5	
+	1.13.2		Online	Carnitas	233.1	
+1.12.0		0.04.5	Person	Chicken	232	Store 2
+	2.01.5		Person	Chicken	231.4	
+	1.12.0		Online	Chicken	231.8	
+1.08.4		0.04.3	Online	Chicken	230.8	
+	1.10.8		Online	Carnitas	229.2	
+2.02.4		0.04.9	Person	Carnitas	228.6	
+	1.12.8		Person	Carnitas	229.4	
+1.12.5		0.05.2	Online	Chicken	229	
+	1.09.9		Online	Chicken	229.4	
+1.12.5		0.07.1	Person	Chicken	229.2	
+1.12.4		0.03.5	Person	Chicken	228	Store 3
+	1.09.9		Online	Chicken	228.3	
+1.02.9		0.03.9	Online	Chicken	229	
+	2.01.2		Person	Chicken	228.3	
+1.07.1		0.03.6	Online	Carnitas	227.8	
+	1.15.2		Online	Carnitas	226.7	
+1.06.9		0.03.4	Online	Carnitas	226.5	
+	2.00.7		Person	Chicken	225.2	
+	2.01.7	0.03.1	Person	Chicken	224.8	
+1.10.1			Person	Chicken	224.4	
