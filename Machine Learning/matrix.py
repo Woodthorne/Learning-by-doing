@@ -24,31 +24,18 @@ class Architect:
 
         return rows, columns
 
-    def show_matrix(self, matrix: list[list]) -> None:
-        rows, columns = self.check_matrix_dimensions(matrix)
-        longest_value_string = 0
-        for row in matrix:
-            for value in row:
-                if len(str(value)) > longest_value_string:
-                    longest_value_string = len(str(value))
-        print(f'This is a {rows}x{columns} matrix:')
-        for row in matrix:
-            printable_row = []
-            for value in row:
-                value_len = len(str(value))
-                value = f'{" " * (longest_value_string - value_len)}{value}'
-                printable_row.append(value)
-            print(printable_row)
-
     def multiply_matrices(self,
                           matrix1: list[list[int|float]],
                           matrix2: list[list[int|float]]
                           ) -> list[list[int|float]]:
+        if type(matrix1) != list or type(matrix2) != list:
+            raise TypeError
+
         rows1, columns1 = self.check_matrix_dimensions(matrix1)
         rows2, columns2 = self.check_matrix_dimensions(matrix2)
         if columns1 != rows2:
             print('Matrices have incompatible dimensions')
-            return False
+            raise ValueError
 
         new_matrix: list[list[int|float]] = []
         for row in range(rows1):
@@ -69,6 +56,44 @@ class Architect:
             row += 1
         
         return new_matrix
+
+    def show_matrix(self, matrix: list[list]) -> None:
+        if type(matrix) != list:
+            raise TypeError
+        
+        rows, columns = self.check_matrix_dimensions(matrix)
+        longest_value_string = 0
+        for row in matrix:
+            for value in row:
+                if len(str(value)) > longest_value_string:
+                    longest_value_string = len(str(value))
+        print(f'This is a {rows}x{columns} matrix:')
+        for row in matrix:
+            printable_row = []
+            for value in row:
+                value_len = len(str(value))
+                value = f'{" " * (longest_value_string - value_len)}{value}'
+                printable_row.append(value)
+            print(printable_row)
+    
+    def string_to_matrix(self, string: str) -> list:
+        if type(string) != str:
+            raise TypeError
+        if string[0] != '[' or string[-1] != ']':
+            raise ValueError
+        
+        new_string = ''
+        new_matrix = []
+        while index < len(string):
+            if string[index] == '[':
+                index += 1
+                start_index = index
+                while index < len(string):
+                    if string[index] == ']':
+                        new_matrix.append(self.string_to_matrix[start_index:index])
+
+
+        index = 0
 
 
 _inst = Architect()
