@@ -3,7 +3,12 @@ This repository is made to host various assignments and tasks I do as part of my
 
 While I endeavour to make everything readable in english, some things might start of with swedish text.
 
-## Table of contents
+## Subfolder contents
 * Basic Python: Various exercises done as part of a school course.
     * Pythonövningar(num): All exercises done as part of the course. Initial upload in swedish. Translation into english is unlikely unless specifically asked for, as I want to preserve this code as much as possible.
 * Databases: Various exercises done as part of a school course. Features text files with the input given to DBeaver when interacting with the Northwind database.
+* DeepLearning: Jupyter notebooks containing different analyses of datasets and predictive models.
+* Machine Learning: Jupyter notebooks dealing with dataset analysis and clustering.
+* Web Framework: Various files from lessons. Of little demo value.
+
+Note that the jupyter notebooks found in DeepLearning and Machine Learning require a kernel to run. The requirements for this kernel can be found in the file 'jupyter-req.txt'.
