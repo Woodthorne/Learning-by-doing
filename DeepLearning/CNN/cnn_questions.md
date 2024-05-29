@@ -1,5 +1,5 @@
 __1. Vad är ett neuralt nätverk?__<br>
-En artificiell modell för predikering som använder sig av dolda lager av 'neuroner' för att succesivt ta sig fram till 'rätt' svar. Konceptet är inspirerat av hjärnan fungerar.
+En artificiell modell för predikering som använder sig av dolda lager av 'neuroner' för att succesivt ta sig fram till 'rätt' svar. Konceptet är inspirerat av hur hjärnan fungerar.
 
 __2. Vad är en convolutional neural network (CNN)?__<br>
 En CNN använder sig av ett 'convolutional layer' för att bryta ner datan i mindre matriser för att fokusera på särskilda egenskaper.
