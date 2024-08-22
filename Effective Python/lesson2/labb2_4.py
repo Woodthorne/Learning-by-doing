@@ -10,8 +10,8 @@ Testa med 8000 element - det borde ta 64 gånger mer tid än för 1000
 '''
 
 from labb2_1 import bubble_sort_players
-from labb_common import time_team_sorting
+from labb_common import doubling_array, time_team_sorting
 
 if __name__ == '__main__':
-    team_sizes = [1000, 2000, 4000, 8000]
+    team_sizes = doubling_array(entries = 10, initial = 1000)
     time_team_sorting(bubble_sort_players, team_sizes)

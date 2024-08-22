@@ -51,6 +51,12 @@ class TeamRecruiter:
 def show_team_numbers(team: list[HockeyPlayer]):
     print([player.number for player in team])
 
+def doubling_array(entries: int = 4, initial: int = 1000) -> list[int]:
+    values = [initial]
+    for _ in range(entries - 1):
+        values.append(2 * values[-1])
+    return values
+
 def time_team_sorting(func, sizes: list[int]):
     recruiter = TeamRecruiter()
     teams = [recruiter.make_team(size) for size in sizes]
