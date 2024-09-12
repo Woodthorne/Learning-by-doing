@@ -23,11 +23,11 @@ def two_sum_2(nums: list[int], target: int) -> list[int]:
 
 def two_sum_3(nums: list[int], target: int) -> list[int]:
     dict_nums = {num: index for index, num in enumerate(nums)}
-    for num in nums:
+    for index, num in enumerate(nums):
         target_buddy = target - num
         if target_buddy in dict_nums \
-        and dict_nums[num] != dict_nums[target_buddy]:
-            return dict_nums[num], dict_nums[target_buddy]
+        and index != dict_nums[target_buddy]:
+            return index, dict_nums[target_buddy]
 
 tests = [
     dict(
