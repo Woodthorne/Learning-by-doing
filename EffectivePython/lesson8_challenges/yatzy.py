@@ -1,36 +1,42 @@
-from random import randint as roll_die
+import os
+import random
+import string
+
 
 class Slot:
     def __init__(self) -> None:
         self._value = None
-        self._blocked = False
+        self._is_blocked = False
 
     @property
     def value(self) -> int:
-        if self.blocked or self._value == None:
+        if self.is_blocked or self._value == None:
             return 0
         else:
             return self._value
     
     @property
-    def blocked(self) -> bool:
-        return self._blocked
+    def is_blocked(self) -> bool:
+        return self._is_blocked
 
     def block(self) -> bool:
-        if self.blocked:
+        if self.is_blocked:
             return False
         else:
-            self._blocked = True
+            self._is_blocked = True
             return True
     
     def score(self, dice: list[int]) -> bool:
         # Logic for verifying scoring
         return False
+    
+    def __str__(self) -> str:
+        return self.__class__.__name__
 
 
 class Upper(Slot):
     def score(self, dice: list[int], target: int) -> bool:
-        if self.value == 0 and not self.blocked:
+        if self.value == 0 and not self.is_blocked:
             total = sum(die for die in dice if die == target)
             if total > 0:
                 self._value = total
@@ -40,7 +46,7 @@ class Upper(Slot):
 
 class Matching(Slot):
     def score(self, dice: list[int], matches: int) -> bool:
-        if self.value == 0 and not self.blocked:
+        if self.value == 0 and not self.is_blocked:
             sorted_dice = sorted(dice, reverse = True)
             for index in range(matches - 1, len(sorted_dice)):
                 checking_dice = [sorted_dice[index - shift] for shift in range(matches)]
@@ -57,7 +63,7 @@ class Matching(Slot):
 
 class Straight(Slot):
     def score(self, dice: list[int], target_dice: list) -> bool:
-        if self.value == 0 and not self.blocked:
+        if self.value == 0 and not self.is_blocked:
             sorted_dice = sorted(dice)
             if sorted_dice == target_dice:
                 self._value = sum(dice)
@@ -68,51 +74,75 @@ class Straight(Slot):
 class Ones(Upper):
     def score(self, dice: list[int]) -> bool:
         return super().score(dice, target = 1)
+    
+    def __str__(self) -> str:
+        return 'Ettor'
 
 
 class Twos(Upper):
     def score(self, dice: list[int]) -> bool:
         return super().score(dice, target = 2)
+    
+    def __str__(self) -> str:
+        return 'Tvåor'
 
 
 class Threes(Upper):
     def score(self, dice: list[int]) -> bool:
         return super().score(dice, target = 3)
+    
+    def __str__(self) -> str:
+        return 'Treor'
 
 
 class Fours(Upper):
     def score(self, dice: list[int]) -> bool:
         return super().score(dice, target = 4)
+    
+    def __str__(self) -> str:
+        return 'Fyror'
 
 
 class Fives(Upper):
     def score(self, dice: list[int]) -> bool:
         return super().score(dice, target = 5)
+    
+    def __str__(self) -> str:
+        return 'Femmor'
 
 
 class Sixes(Upper):
     def score(self, dice: list[int]) -> bool:
         return super().score(dice, target = 6)
+    
+    def __str__(self) -> str:
+        return 'Sexor'
 
 
 class Bonus(Slot):
     def verify(self, upper_scores: list[int]) -> bool:
-        if self.value == 0 and not self.blocked:
+        if self.value == 0 and not self.is_blocked:
             total_upper = sum(upper_scores)
             if total_upper >= 63:
                 self._value = 50
                 return True
         return False
+    
+    def __str__(self) -> str:
+        return 'Bonus'
 
 
 class Pair(Matching):
     def score(self, dice: list[int]) -> bool:
         return super().score(dice, matches = 2)
+    
+    def __str__(self) -> str:
+        return 'Par'
 
 
 class Pairs(Slot):
     def score(self, dice: list[int]) -> bool:
-        if self.value == 0 and not self.blocked:
+        if self.value == 0 and not self.is_blocked:
             sorted_dice = sorted(dice, reverse = True)
             scored = None
             score_1 = None
@@ -131,30 +161,45 @@ class Pairs(Slot):
                 return True
         return False
 
+    def __str__(self) -> str:
+        return 'Två par'
+
 
 class Triple(Matching):
     def score(self, dice: list[int]) -> bool:
         return super().score(dice, matches = 3)
+    
+    def __str__(self) -> str:
+        return 'Tretal'
 
 
 class Quadruple(Matching):
     def score(self, dice: list[int]) -> bool:
         return super().score(dice, matches = 4)
+    
+    def __str__(self) -> str:
+        return 'Fyrtal'
 
 
 class StraightSmall(Straight):
     def score(self, dice: list[int]) -> bool:
         return super().score(dice, target_dice = [1, 2, 3, 4, 5])
+    
+    def __str__(self) -> str:
+        return 'Liten stege'
 
 
 class StraightLarge(Straight):
     def score(self, dice: list[int]) -> bool:
         return super().score(dice, target_dice = [2, 3, 4, 5, 6])
+    
+    def __str__(self) -> str:
+        return 'Stor stege'
 
 
 class House(Slot):
     def score(self, dice: list[int]) -> bool:
-        if self.value == 0 and not self.blocked:
+        if self.value == 0 and not self.is_blocked:
             sorted_dice = sorted(dice, reverse = True)
             biggest = sorted_dice[0]
             smallest = sorted_dice[1]
@@ -171,14 +216,20 @@ class House(Slot):
                 self._value = sum(dice)
                 return True
         return False
+    
+    def __str__(self) -> str:
+        return 'Kåk'
 
 
 class Chance(Slot):
     def score(self, dice: list[int]) -> bool:
-        if self.value == 0 and not self.blocked:
+        if self.value == 0 and not self.is_blocked:
             self._value = sum(dice)
             return True
         return False
+    
+    def __str__(self) -> str:
+        return 'Chans'
 
 
 class Yatzy(Matching):
@@ -187,6 +238,9 @@ class Yatzy(Matching):
             self._value = 50
             return True
         return False
+    
+    def __str__(self) -> str:
+        return 'Yatzy'
 
 
 class Player:
@@ -221,3 +275,317 @@ class Player:
             score += slot.value
         return score
     
+    def is_done(self) -> bool:
+        for slot in self.scores.values():
+            if slot.is_blocked or slot.value == 0:
+                return False
+        return True
+
+
+class Game:
+    def __init__(self) -> None:
+        self.players: list[Player] = []
+        self._ui = Interface()
+    
+    def run(self) -> None:
+        description = ''
+        self._ui.print_menu(
+            header = 'YATZY',
+            description = description,
+            options = ['Nytt spel'],
+            escape = 'Avsluta'
+        )
+        description = ''
+        opt = input('>>> ')
+        match opt:
+            case '0':
+                quit()
+            case '1':
+                self._setup_game()
+            case _:
+                description = 'Ogiltigt kommando'
+
+    def _setup_game(self) -> None:
+        description = ''
+        options = ['Lägg till spelare']
+        while True:
+            if len(self.players) != 0:
+                listing = [player.name for player in self.players]
+                for command in ['Ta bort spelare', 'Börja spelet']:
+                    if command not in options:
+                        options.append(command)
+            else:
+                listing = None
+                for command in ['Ta bort spelare', 'Börja spelet']:
+                    if command in options:
+                        options.remove(command)
+            self._ui.print_menu(
+                header = 'Starta nytt spel',
+                description = description,
+                listing = listing,
+                options = options,
+                escape = 'Tillbaka till huvudmeny'
+            )
+            description = ''
+            opt = input('>>> ')
+            match opt:
+                case '0':
+                    return
+                case '1':
+                    self._add_player()
+                case '2':
+                    if len(self.players) == 0:
+                        description = 'Ogiltigt kommando'
+                    else:
+                        self._remove_player()
+                case '3':
+                    if len(self.players) == 0:
+                        description = 'Ogiltigt kommando'
+                    else:
+                        self._play_game()
+                        return
+                case _:
+                    description = 'Ogiltigt kommando'
+    
+    def _add_player(self) -> None:
+        while True:
+            self._ui.print_menu(
+                header = 'Lägg till spelare',
+                listing = [
+                    'Skriv namn på spelare',
+                    '0. Tillbaka till nytt spel'
+                ]
+            )
+            opt = input('>>> ')
+            match opt:
+                case '0':
+                    return
+                case _:
+                    while True:
+                        confirm = input(f'Använd spelarnamn {opt}? (j/n)').lower()
+                        match confirm:
+                            case 'j':
+                                self.players.append(Player(opt))
+                                return
+                            case 'n':
+                                break
+                            case _:
+                                print('Ogiltigt kommando')
+
+    def _remove_player(self) -> None:
+        description = ''
+        while True:
+            self._ui.print_menu(
+                header = 'Ta bort spelare',
+                description = description + 'Välj spelare att ta bort',
+                options = [player.name for player in self.players],
+                escape = 'Tillbaka till nytt spel' 
+            )
+            opt = input('>>> ')
+            match opt:
+                case '0':
+                    return
+                case _:
+                    if opt in [str(index + 1) for index in range(len(self.players))]:
+                        self.players.pop(int(opt) - 1)
+                        if len(self.players) == 0:
+                            return
+
+    def _play_game(self) -> None:
+        random.shuffle(self.players)
+        turn_count = 0
+        active_player_index = 0
+        active_player = self.players[active_player_index]
+        while not active_player.is_done():
+            dice = [random.randint(1, 6) for _ in range(5)]
+            saved_indexes = set()
+            turn_count += 1
+            rolls = 1
+            while rolls < 3:
+                header = f'Tur {turn_count}: {active_player.name}'
+                listing = []
+                for index, die in enumerate(dice):
+                    row = string.ascii_lowercase[index] + ' ' + str(die)
+                    if index in saved_indexes:
+                        row += ' - låst'
+                    listing.append(row)
+                description = 'Välj tärning att låsa eller låsa upp innan nästa tärningsslag.'
+                self._ui.print_menu(
+                    header = header + f' - Slag {rolls}/3',
+                    description = description,
+                    listing = listing,
+                    options = ['Slå tärningarna'],
+                    escape = 'Spara resultat' 
+                )
+                opt = input('>>> ').lower()
+                match opt:
+                    case '0':
+                        break
+                    case '1':
+                        for index in range(len(dice)):
+                            if index not in saved_indexes:
+                                dice[index] = random.randint(1, 6)
+                        rolls += 1
+                    case _:
+                        if opt in string.ascii_lowercase[:5]:
+                            index = string.ascii_lowercase.index(opt)
+                            if index in saved_indexes:
+                                saved_indexes.remove(index)
+                            else:
+                                saved_indexes.add(index)
+            scored = False
+            while not scored:
+                options = []
+                opts = []
+                for slot_key in active_player.scores.keys():
+                    slot = active_player.scores[slot_key]
+                    if not slot.is_blocked and slot.value == 0 and str(slot) != 'Bonus':
+                        options.append(str(slot))
+                        opts.append(slot_key)
+                self._ui.print_menu(
+                    header = header + ' - Poängsättning',
+                    listing = [str(die) for die in dice],
+                    options = options,
+                    escape = 'Stryk ruta istället'
+                )
+                opt = input('>>> ')
+                match opt:
+                    case '0':
+                        pass # block slot
+                    case _:
+                        if opt.isnumeric():
+                            if 0 <= int(opt) - 1 < len(opts):
+                                scored = active_player.scores[opts[int(opt) - 1]].score(dice)
+            active_player_index = (active_player_index + 1) % len(self.players)
+            active_player = self.players[active_player_index]
+        
+        self.players.sort(key = lambda x: x.total_score())
+        winner = self.players[-1]
+        while True:
+            self._ui.print_menu(
+                header = 'Spelet är slut',
+                description = f'{winner.name} har vunnit spelet med {winner.total_score()}',
+                listing = [f'{player.name}: {player.total_score()}' for player in self.players],
+                escape = 'Tillbaka till huvumenyn'
+            )
+            opt = input('>>> ')
+            match opt:
+                case '0':
+                    return
+
+
+class Interface:
+    def print_menu(
+            self,
+            header: str,
+            menu_width: int = 6,
+            description: str = None,
+            listing: list[str] = None,
+            options: list[str] = None,
+            escape: str = None
+        ) -> None:
+        '''
+        Prints a bordered menu. Can contain description, lists, and options.
+        
+        header: Header of the menu.
+        
+        menu_width: Optional int. Specifies the minimum width of the menu.
+            Defaults to 6 characters.
+
+        description: Optional string. Wraps the string so that it fits within the
+            width of the menu borders.
+        
+        listing: Optional list of strings. Produces unnumbered list.
+        
+        options: Optional list of option strings. Will get numbered starting
+            at 1.
+        
+        escape: Optional string. Adds option "0." at the bottom of options.
+            Useful for escaping option.
+        
+        
+        '''
+        if len(header) > 2:
+            menu_width += len(header) - 2
+        if listing:
+            for item in listing:
+                if len(item) + 4 > menu_width:
+                    menu_width = len(item) + 4
+        if options:
+            for item in options:
+                if len(item) + 7 > menu_width:
+                    menu_width = len(item) + 7
+        if escape and len(escape) + 7 > menu_width:
+            menu_width = len(escape) + 7
+        content_width = menu_width - 4
+
+        self._new_screen()
+        print(f'=={header}{"=" * (content_width - len(header))}==')
+        option_num = 0
+        if description:
+            if len(description) <= content_width:
+                padding = content_width - len(description)
+                print(f'| {description}{" " * padding} |')
+            else:
+                split_description = description.split(' ')
+                while split_description:
+                    current_row = ''
+                    while split_description and len(current_row) \
+                                                + len(split_description[0]) \
+                                                + 1 \
+                                                    <= content_width:
+                        current_row += ' ' + split_description.pop(0)
+                    padding = content_width - len(current_row)
+                    print(f'| {current_row}{" " * padding} |')
+            print('=' * menu_width)
+        
+        if listing:
+            for item in listing:
+                padding = content_width - len(item)
+                print(f'| {item}{" " * padding} |')
+            print('=' * menu_width)
+
+        if options:
+            for item in options:
+                option_num += 1
+                padding = content_width - len(item) - 3
+                print(f'| {option_num}. {item}{" " * padding} |')
+        if escape:
+            padding = content_width - len(escape) - 2
+            print(f'| 0. {escape}{" " * padding}|')
+        if options or escape:
+            print('=' * menu_width)
+
+    def _string_wrap(self, string: str, max_width: int) -> str:
+        '''
+        Rudimentary string wrapper which takes a string and maximum width and
+        splits the rows at the blank space preceding a width-breaching word.
+        '''
+        if len(string) <= max_width:
+            return string
+        split_string = string.split(' ')
+        new_string_list = []
+        while split_string:
+            current_row = []
+            while split_string and len(current_row) \
+                                    + len(str(current_row)) \
+                                    + len(split_string[0]) \
+                                    <= max_width:
+                current_row.append(split_string.pop(0))
+            new_string_list.append(" ".join(current_row))
+        new_string = '\n'.join(new_string_list)
+        return new_string
+
+    def _new_screen(self):
+        '''
+        Clears the screen, for windows and unix
+        '''
+        if os.name == 'nt':
+            os.system('cls')
+        else:
+            os.system('clear')
+
+
+if __name__ == '__main__':
+    game = Game()
+    game.run()
