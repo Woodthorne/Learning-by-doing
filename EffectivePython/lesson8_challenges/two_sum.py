@@ -7,7 +7,7 @@ def two_sum(nums: list[int], target: int) -> list[int]:
                 break
             elif num1 + num2 == target:
                 return [index1, index2]
-            
+
 def two_sum_2(nums: list[int], target: int) -> list[int]:
     sorted_nums = sorted(nums)
     index1 = 0
@@ -29,6 +29,7 @@ def two_sum_3(nums: list[int], target: int) -> list[int]:
         and index != dict_nums[target_buddy]:
             return index, dict_nums[target_buddy]
 
+# Solution given from instructor
 def two_sum_solved(nums: list[int], target: int) -> list[int]:
     dict_nums = {}
     for index, num in enumerate(nums):
