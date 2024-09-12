@@ -29,6 +29,15 @@ def two_sum_3(nums: list[int], target: int) -> list[int]:
         and index != dict_nums[target_buddy]:
             return index, dict_nums[target_buddy]
 
+def two_sum_solved(nums: list[int], target: int) -> list[int]:
+    dict_nums = {}
+    for index, num in enumerate(nums):
+        complement = target - num
+        if complement in dict_nums:
+            return [index, dict_nums[complement]]
+        dict_nums[num] = index
+    return []
+
 tests = [
     dict(
         nums = [2,7,11,15],
@@ -47,7 +56,7 @@ tests = [
     )
 ]
 
-for func in [two_sum, two_sum_2, two_sum_3]:
+for func in [two_sum, two_sum_2, two_sum_3, two_sum_solved]:
     print(func.__name__)
     start = default_timer()
     for test in tests:
