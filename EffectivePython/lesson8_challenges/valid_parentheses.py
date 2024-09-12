@@ -10,7 +10,7 @@ class Solution:
             if char in ['(', '{', '[']:
                 active_brackets.append(char)
             else:
-                if closing[char] == active_brackets[-1]:
+                if active_brackets and closing[char] == active_brackets[-1]:
                     active_brackets.pop()
                 else:
                     return False
