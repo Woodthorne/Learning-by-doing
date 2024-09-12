@@ -21,6 +21,13 @@ def two_sum_2(nums: list[int], target: int) -> list[int]:
         elif sum_ < target:
             index1 += 1
 
+def two_sum_3(nums: list[int], target: int) -> list[int]:
+    dict_nums = {num: index for index, num in enumerate(nums)}
+    for num in nums:
+        target_buddy = target - num
+        if target_buddy in dict_nums:
+            return dict_nums[num], dict_nums[target_buddy]
+
 tests = [
     dict(
         nums = [2,7,11,15],
@@ -39,7 +46,7 @@ tests = [
     )
 ]
 
-for func in [two_sum, two_sum_2]:
+for func in [two_sum, two_sum_2, two_sum_3]:
     print(func.__name__)
     start = default_timer()
     for test in tests:
