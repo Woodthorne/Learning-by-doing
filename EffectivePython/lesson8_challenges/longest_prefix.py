@@ -7,9 +7,9 @@ def longest_common_prefix(strs: list[str]) -> str:
             if prefix not in prefixes:
                 prefixes[prefix] = 0
             prefixes[prefix] += 1
-    sorted_prefixes = [sorted(prefix, key = lambda x: len(x), reverse = True) for prefix in prefixes if prefixes[prefix] > 1]
-    if sorted_prefixes:
-        return sorted_prefixes[0]
+    filtered_prefixes = list(prefix for prefix in prefixes if prefixes[prefix] == len(strs))
+    if filtered_prefixes:
+        return sorted(filtered_prefixes, key = lambda x: len(x), reverse = True)[0]
     else:
         return ''
 
