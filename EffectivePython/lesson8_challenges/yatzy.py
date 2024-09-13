@@ -5,36 +5,23 @@ import string
 
 class Slot:
     def __init__(self) -> None:
-        self._value = None
-        self._is_blocked = False
+        self._points = None
 
     @property
-    def value(self) -> int:
-        if self.is_blocked or self._value == None:
+    def points(self) -> int:
+        if self.is_scorable():
             return 0
         else:
-            return self._value
-    
-    @property
-    def is_blocked(self) -> bool:
-        return self._is_blocked
-
-    def block(self) -> bool:
-        if self.is_blocked:
-            return False
-        self._is_blocked = True
-        return True
+            return self._points
     
     def score(self, dice_values: list[int]) -> bool:
         # Logic for verifying scoring
         return False
     
     def is_scorable(self) -> bool:
-        if self.is_blocked:
-            return False
-        if self.value != 0:
-            return False
-        return True
+        if self._points == None:
+            return True
+        return False
     
     def __str__(self) -> str:
         return self.__class__.__name__
@@ -42,17 +29,17 @@ class Slot:
 
 class Upper(Slot):
     def score(self, dice_values: list[int], target: int) -> bool:
-        if self.value == 0 and not self.is_blocked:
+        if self.is_scorable():
             total = sum(die for die in dice_values if die == target)
             if total > 0:
-                self._value = total
+                self._points = total
                 return True
         return False
 
 
 class Matching(Slot):
     def score(self, dice_values: list[int], matches: int) -> bool:
-        if self.value == 0 and not self.is_blocked:
+        if self.is_scorable():
             sorted_dice = sorted(dice_values, reverse = True)
             for index in range(matches - 1, len(sorted_dice)):
                 checking_dice = [sorted_dice[index - shift] for shift in range(matches)]
@@ -62,17 +49,17 @@ class Matching(Slot):
                         valid = False
                         break
                 if valid:
-                    self._value = sum(checking_dice)
+                    self._points = sum(checking_dice)
                     return True
         return False
 
 
 class Straight(Slot):
     def score(self, dice_values: list[int], target_dice: list) -> bool:
-        if self.value == 0 and not self.is_blocked:
+        if self.is_scorable():
             sorted_dice = sorted(dice_values)
             if sorted_dice == target_dice:
-                self._value = sum(dice_values)
+                self._points = sum(dice_values)
                 return True
         return False
 
@@ -126,11 +113,18 @@ class Sixes(Upper):
 
 
 class Bonus(Slot):
+    @property
+    def points(self) -> int:
+        if self._points == None:
+            return 0
+        else:
+            return self._points
+
     def verify(self, upper_scores: list[int]) -> bool:
-        if self.value == 0 and not self.is_blocked:
+        if self.is_scorable():
             total_upper = sum(upper_scores)
             if total_upper >= 63:
-                self._value = 50
+                self._points = 50
                 return True
         return False
     
@@ -151,7 +145,7 @@ class Pair(Matching):
 
 class Pairs(Slot):
     def score(self, dice_values: list[int]) -> bool:
-        if self.value == 0 and not self.is_blocked:
+        if self.is_scorable():
             sorted_dice = sorted(dice_values, reverse = True)
             scored = None
             score_1 = None
@@ -166,7 +160,7 @@ class Pairs(Slot):
                     elif index not in scored and index - 1 not in scored:
                         score_2 = die_1 + die_2
             if score_1 and score_2:
-                self._value = score_1 + score_2
+                self._points = score_1 + score_2
                 return True
         return False
 
@@ -208,7 +202,7 @@ class StraightLarge(Straight):
 
 class House(Slot):
     def score(self, dice_values: list[int]) -> bool:
-        if self.value == 0 and not self.is_blocked:
+        if self.is_scorable():
             sorted_dice = sorted(dice_values, reverse = True)
             biggest = sorted_dice[0]
             smallest = sorted_dice[1]
@@ -222,7 +216,7 @@ class House(Slot):
                     small_count += 1
             
             if {big_count, small_count} == {2, 3}:
-                self._value = sum(dice_values)
+                self._points = sum(dice_values)
                 return True
         return False
     
@@ -232,8 +226,8 @@ class House(Slot):
 
 class Chance(Slot):
     def score(self, dice_values: list[int]) -> bool:
-        if self.value == 0 and not self.is_blocked:
-            self._value = sum(dice_values)
+        if self.is_scorable():
+            self._points = sum(dice_values)
             return True
         return False
     
@@ -244,7 +238,7 @@ class Chance(Slot):
 class Yatzy(Matching):
     def score(self, dice_values: list[int]) -> bool:
         if super().score(dice_values, matches = 5):
-            self._value = 50
+            self._points = 50
             return True
         return False
     
@@ -274,31 +268,28 @@ class Player:
             chance = Chance(),
             yatzy = Yatzy(),
         )
-    
-    def block_slot(self, slot: str) -> bool:
-        return self.scores[slot].block()
 
     def total_score(self) -> int:
         score = 0
         for slot in self.scores.values():
-            score += slot.value
+            score += slot.points
         return score
     
     def is_done(self) -> bool:
         for slot in self.scores.values():
-            if slot.is_blocked or slot.value == 0:
+            if slot.is_scorable():
                 return False
         return True
 
 
 class Die:
     def __init__(self) -> None:
-        self._value = None
+        self._points = None
         self._is_locked = False
     
     @property
-    def value(self) -> int|None:
-        return self._value
+    def points(self) -> int|None:
+        return self._points
     
     @property
     def is_locked(self) -> bool:
@@ -306,7 +297,7 @@ class Die:
 
     def roll(self) -> None:
         if not self.is_locked:
-            self._value = random.randint(1, 6)
+            self._points = random.randint(1, 6)
     
     def toggle_lock(self) -> None:
         self._is_locked = not self._is_locked
@@ -443,7 +434,7 @@ class Game:
                     ),
                     notification,
                     'Välj tärning att låsa eller låsa upp innan nästa tärningsslag',
-                    *[f'{key}: {die.value} - låst' if dice[key].is_locked else f'{key}: {die.value}' for key, die in dice.items() ],
+                    *[f'{key}: {die.points} - låst' if dice[key].is_locked else f'{key}: {die.points}' for key, die in dice.items() ],
                     '1. Slå olåsta tärningarna',
                     '0. Gå till poängsättning'
                 )
@@ -464,44 +455,21 @@ class Game:
             scored = False
             notification = None
             while not scored:
-                opts = [key for key in active_player.scores.keys() if active_player.scores[key].is_scorable()]
+                opts = {str(index + 1): key for index, key in enumerate(active_player.scores.keys()) if active_player.scores[key].is_scorable()}
                 self._print_rows(
                     self._header(
                         f'Tur {turn_count}: {active_player.name}',
                         'Poängsättning'
                     ),
                     notification,
-                    f'Tärningar: {" ".join(map(str,[die.value for die in dice.values()]))}',
-                    *[f'{index + 1}: {active_player.scores[key]}' for index, key in enumerate(opts)],
-                    '0: Stryk ruta istället'
+                    f'Tärningar: {" ".join(map(str,[die.points for die in dice.values()]))}',
+                    *[f'{index + 1}: {active_player.scores[slot]}' if slot in opts.values() else f'   {active_player.scores[slot]}: {active_player.scores[slot].points}' for index, slot in enumerate(active_player.scores.keys())]
                 )
                 notification = None
                 opt = input('>>> ')
-                if opt == '0':
-                    while not scored:
-                        self._print_rows(
-                            self._header(
-                                f'Tur {turn_count}: {active_player.name}'
-                                'Stryk ruta'
-                            ),
-                            notification,
-                            f'Tärningar: {" ".join(map(str,[die.value for die in dice.values()]))}',
-                            *[f'{index + 1}: {active_player.scores[key]}' for index, key in enumerate(opts) ],
-                            '0: Fyll i poäng istället'
-                        )
-                        notification = None
-                        opt = input('>>> ')
-                        if opt == '0':
-                            break
-                        elif opt.isnumeric() and 0 <= int(opt) - 1 < len(opts):
-                            opt_index = int(opt) - 1
-                            scored = active_player.scores[opts[opt_index]].block()
-                        if not scored:
-                            notification = 'Ogiltigt kommando'
-                elif opt.isnumeric() and 0 <= int(opt) - 1 < len(opts):
-                    opt_index = int(opt) - 1
-                    dice_values = [die.value for die in dice.values()]
-                    scored = active_player.scores[opts[opt_index]].score(dice_values)
+                if opt in opts.keys() and active_player.scores[opts[opt]].is_scorable():
+                    dice_values = [die.points for die in dice.values()]
+                    scored = active_player.scores[opts[opt]].score(dice_values)
                 else:
                     notification = 'Ogiltigt kommando'
             
@@ -525,7 +493,6 @@ class Game:
                     return
                 else:
                     print('Ogiltigt kommando')
-
     
     def _print_rows(self, *rows: str) -> None:
         self._new_screen()
