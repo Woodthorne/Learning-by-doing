@@ -315,7 +315,6 @@ class Die:
 class Game:
     def __init__(self) -> None:
         self.players: list[Player] = []
-        self._ui = Interface()
     
     def run(self) -> None:
         notification = None
@@ -326,12 +325,6 @@ class Game:
                 '1. Nytt spel',
                 '0. Avsluta'
             )
-            # self._ui.print_menu(
-            #     header = 'YATZY',
-            #     description = notification,
-            #     options = ['Nytt spel'],
-            #     escape = 'Avsluta'
-            # )
             notification = ''
             opt = input('>>> ')
             if opt == '0':
@@ -343,7 +336,6 @@ class Game:
 
     def _setup_game(self) -> None:
         notification = None
-        # options = ['Lägg till spelare']
         while True:
             self._print_rows(
                 self._header('Nytt spel'),
@@ -355,23 +347,6 @@ class Game:
                 '3. Börja spelet' if len(self.players) != 0 else None,
                 '0. Tillbaka till huvudmeny'
             )
-            # if len(self.players) != 0:
-            #     listing = [player.name for player in self.players]
-            #     for command in ['Ta bort spelare', 'Börja spelet']:
-            #         if command not in options:
-            #             options.append(command)
-            # else:
-            #     listing = None
-            #     for command in ['Ta bort spelare', 'Börja spelet']:
-            #         if command in options:
-            #             options.remove(command)
-            # self._ui.print_menu(
-            #     header = 'Starta nytt spel',
-            #     description = notification,
-            #     listing = listing,
-            #     options = options,
-            #     escape = 'Tillbaka till huvudmeny'
-            # )
             notification = None
             opt = input('>>> ')
             if opt == '0':
@@ -399,13 +374,6 @@ class Game:
                 'Skriv namn på spelare',
                 '0. Avbryt'
             )
-            # self._ui.print_menu(
-            #     header = 'Lägg till spelare',
-            #     listing = [
-            #         'Skriv namn på spelare',
-            #         '0. Tillbaka till nytt spel'
-            #     ]
-            # )
             notification = None
             opt = input('>>> ')
             if opt == '0':
@@ -437,12 +405,6 @@ class Game:
                 'Skriv namn på spelaren du vill ta bort',
                 '0. Avbryt'
             )
-            # self._ui.print_menu(
-            #     header = 'Ta bort spelare',
-            #     description = notification + 'Välj spelare att ta bort',
-            #     options = [player.name for player in self.players],
-            #     escape = 'Tillbaka till nytt spel' 
-            # )
             notification = None
             opt = input('>>> ')
             if opt == '0':
@@ -485,21 +447,6 @@ class Game:
                     '1. Slå olåsta tärningarna',
                     '0. Gå till poängsättning'
                 )
-                # header = f'Tur {turn_count}: {active_player.name}'
-                # listing = []
-                # for char, die in dice.items():
-                #     row = f'{char}. {die.value}'
-                #     if die.is_locked:
-                #         row += ' - låst'
-                #     listing.append(row)
-                # description = 'Välj tärning att låsa eller låsa upp innan nästa tärningsslag.'
-                # self._ui.print_menu(
-                #     header = header + f' - Slag {rolls}/3',
-                #     description = description,
-                #     listing = listing,
-                #     options = ['Slå tärningarna'],
-                #     escape = 'Spara resultat' 
-                # )
                 notification = None
                 opt = input('>>> ').lower()
                 if opt == '0':
@@ -517,7 +464,6 @@ class Game:
             scored = False
             notification = None
             while not scored:
-                # dice_values = [die.value for die in dice.values()]
                 opts = [key for key in active_player.scores.keys() if active_player.scores[key].is_scorable()]
                 self._print_rows(
                     self._header(
@@ -529,22 +475,6 @@ class Game:
                     *[f'{index + 1}: {active_player.scores[key]}' for index, key in enumerate(opts)],
                     '0: Stryk ruta istället'
                 )
-                # description = 'Tärningar:'
-                # for num in dice_values:
-                #     description += f' {num}'
-                # options = []
-                # opts = []
-                # for slot_key in active_player.scores.keys():
-                #     slot = active_player.scores[slot_key]
-                #     if slot.is_scorable():
-                #         options.append(str(slot))
-                #         opts.append(slot_key)
-                # self._ui.print_menu(
-                #     header = header + ' - Poängsättning',
-                #     description = description,
-                #     options = options,
-                #     escape = 'Stryk ruta istället'
-                # )
                 notification = None
                 opt = input('>>> ')
                 if opt == '0':
@@ -559,18 +489,6 @@ class Game:
                             *[f'{index + 1}: {active_player.scores[key]}' for index, key in enumerate(opts) ],
                             '0: Fyll i poäng istället'
                         )
-                        # options = []
-                        # opts = []
-                        # for slot_key in active_player.scores.keys():
-                        #     slot = active_player.scores[slot_key]
-                        #     if slot.is_scorable():
-                        #         options.append(str(slot))
-                        #         opts.append(slot_key)
-                        # self._ui.print_menu(
-                        #     header = header + ' - Stryk ruta',
-                        #     options = options,
-                        #     escape = 'Fyll i poäng istället'
-                        # )
                         notification = None
                         opt = input('>>> ')
                         if opt == '0':
@@ -601,12 +519,6 @@ class Game:
                 *[f'{index + 1} - {player.name}: {player.total_score()}' for index, player in enumerate(self.players)],
                 '0: Tillbaka till huvudmenyn'
             )
-            # self._ui.print_menu(
-            #     header = 'Spelet är slut',
-            #     description = f'{winner.name} har vunnit spelet med {winner.total_score()}',
-            #     listing = [f'{player.name}: {player.total_score()}' for player in self.players],
-            #     escape = 'Tillbaka till huvudmenyn'
-            # )
             while True:
                 opt = input('>>> ')
                 if opt == '0':
@@ -628,117 +540,6 @@ class Game:
         header += ' ###'
         return header
     
-    def _new_screen(self):
-        '''
-        Clears the screen, for windows and unix
-        '''
-        if os.name == 'nt':
-            os.system('cls')
-        else:
-            os.system('clear')
-
-class Interface:
-    def print_menu(
-            self,
-            header: str,
-            menu_width: int = 6,
-            description: str = None,
-            listing: list[str] = None,
-            options: list[str] = None,
-            escape: str = None
-        ) -> None:
-        '''
-        Prints a bordered menu. Can contain description, lists, and options.
-        
-        header: Header of the menu.
-        
-        menu_width: Optional int. Specifies the minimum width of the menu.
-            Defaults to 6 characters.
-
-        description: Optional string. Wraps the string so that it fits within the
-            width of the menu borders.
-        
-        listing: Optional list of strings. Produces unnumbered list.
-        
-        options: Optional list of option strings. Will get numbered starting
-            at 1.
-        
-        escape: Optional string. Adds option "0." at the bottom of options.
-            Useful for escaping option.
-        
-        
-        '''
-        if len(header) > 2:
-            menu_width += len(header) - 2
-        if listing:
-            for item in listing:
-                if len(item) + 4 > menu_width:
-                    menu_width = len(item) + 4
-        if options:
-            for item in options:
-                if len(item) + 7 > menu_width:
-                    menu_width = len(item) + 7
-        if escape and len(escape) + 7 > menu_width:
-            menu_width = len(escape) + 7
-        content_width = menu_width - 4
-
-        self._new_screen()
-        print(f'=={header}{"=" * (content_width - len(header))}==')
-        option_num = 0
-        if description:
-            if len(description) <= content_width:
-                padding = content_width - len(description)
-                print(f'| {description}{" " * padding} |')
-            else:
-                split_description = description.split(' ')
-                while split_description:
-                    current_row = ''
-                    while split_description and len(current_row) \
-                                                + len(split_description[0]) \
-                                                + 1 \
-                                                    <= content_width:
-                        current_row += ' ' + split_description.pop(0)
-                    padding = content_width - len(current_row)
-                    print(f'| {current_row}{" " * padding} |')
-            print('=' * menu_width)
-        
-        if listing:
-            for item in listing:
-                padding = content_width - len(item)
-                print(f'| {item}{" " * padding} |')
-            print('=' * menu_width)
-
-        if options:
-            for item in options:
-                option_num += 1
-                padding = content_width - len(item) - 3
-                print(f'| {option_num}. {item}{" " * padding} |')
-        if escape:
-            padding = content_width - len(escape) - 2
-            print(f'| 0. {escape}{" " * padding}|')
-        if options or escape:
-            print('=' * menu_width)
-
-    def _string_wrap(self, string: str, max_width: int) -> str:
-        '''
-        Rudimentary string wrapper which takes a string and maximum width and
-        splits the rows at the blank space preceding a width-breaching word.
-        '''
-        if len(string) <= max_width:
-            return string
-        split_string = string.split(' ')
-        new_string_list = []
-        while split_string:
-            current_row = []
-            while split_string and len(current_row) \
-                                    + len(str(current_row)) \
-                                    + len(split_string[0]) \
-                                    <= max_width:
-                current_row.append(split_string.pop(0))
-            new_string_list.append(" ".join(current_row))
-        new_string = '\n'.join(new_string_list)
-        return new_string
-
     def _new_screen(self):
         '''
         Clears the screen, for windows and unix
