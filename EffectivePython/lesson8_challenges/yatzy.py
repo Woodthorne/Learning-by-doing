@@ -425,18 +425,17 @@ class Game:
         random.shuffle(self.players)
         turn_count = 0
         active_player_index = -1
+        active_player = self.players[active_player_index]
 
         # New player Turn
         while not active_player.is_done():
-            active_player_index = (active_player_index + 1) % len(self.players)
-            active_player = self.players[active_player_index]
             turn_count += 1
             dice = {char: Die() for char in string.ascii_lowercase[:5]}
+
+            # Player rolls dice
             for die in dice.values():
                 die.roll()
             rolls = 1
-
-            # Player rolls dice
             while rolls < 3:
                 header = f'Tur {turn_count}: {active_player.name}'
                 listing = []
@@ -468,6 +467,10 @@ class Game:
             # Player chooses how to score
             scored = False
             while not scored:
+                dice_values = [die.value for die in dice.values()]
+                description = 'Tärningar:'
+                for num in dice_values:
+                    description += f' {num}'
                 options = []
                 opts = []
                 for slot_key in active_player.scores.keys():
@@ -477,7 +480,7 @@ class Game:
                         opts.append(slot_key)
                 self._ui.print_menu(
                     header = header + ' - Poängsättning',
-                    listing = [str(die.value) for die in dice.values()],
+                    description = description,
                     options = options,
                     escape = 'Stryk ruta istället'
                 )
@@ -511,6 +514,9 @@ class Game:
                                 opt_index = int(opt) - 1
                                 dice_values = [die.value for die in dice.values()]
                                 scored = active_player.scores[opts[opt_index]].score(dice_values)
+            
+            active_player_index = (active_player_index + 1) % len(self.players)
+            active_player = self.players[active_player_index]
         
         # Game end
         self.players.sort(key = lambda x: x.total_score())
