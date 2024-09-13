@@ -418,12 +418,12 @@ class Game:
         active_player_index = -1
         active_player = self.players[active_player_index]
 
-        # New player Turn
+        ### New player Turn
         while not active_player.is_done():
             turn_count += 1
             dice = {char: Die() for char in string.ascii_lowercase[:5]}
 
-            # Player rolls dice
+            ### Player rolls dice
             for die in dice.values():
                 die.roll()
             rolls = 1
@@ -453,44 +453,50 @@ class Game:
                 else:
                     notification = 'Ogiltigt kommando'
             
-            # Player chooses how to get_score
-            scored = False
-            notification = None
-            dice_values = [die.points for die in dice.values()]
-            options: list[str] = []
-            opts: dict[str, str] = {}
-            scores: dict[str, int] = {}
-            for index, key in enumerate(active_player.scores.keys()):
-                opt_key = str(index + 1)
-                slot = active_player.scores[key]
-                if slot.is_scorable():
-                    opts[opt_key] = key
-                    scores[opt_key] = slot.get_score(dice_values)
-                    options.append(f'{opt_key}: {slot} ({scores[opt_key]})')
-                else:
-                    options.append(f'   {slot} {slot.points}')
-            while not scored:
-                opts = {str(index + 1): key for index, key in enumerate(active_player.scores.keys()) if active_player.scores[key].is_scorable()}
-                self._print_rows(
-                    self._header(
-                        f'Tur {turn_count}: {active_player.name}',
-                        'Poängsättning'
-                    ),
-                    notification,
-                    f'Tärningar: {" ".join(map(str,[die.points for die in dice.values()]))}',
-                    *options
-                )
-                notification = None
-                opt = input('>>> ')
-                if opt in opts.keys():
-                    slot_key = opts[opt]
-                    score = scores[opt]
-                    scored = active_player.scores[slot_key].points = score
-                    if scored and issubclass(active_player.scores[slot_key].__class__, Upper):
-                        upper_scores = [active_player.scores[key].points for key in active_player.scores.keys() if issubclass(active_player.scores[key].__class__, Upper)]
-                        active_player.scores['bonus'].verify(upper_scores)
-                else:
-                    notification = 'Ogiltigt kommando'
+            ### Player chooses how to score points
+            ## Code left commented for time being. Remove when stable.
+            # scored = False
+            # notification = None
+            dice_values = sorted([die.points for die in dice.values()])
+            self._score_points(
+                player = active_player,
+                dice_values = dice_values,
+                turn = turn_count
+            )
+            # options: list[str] = []
+            # opts: dict[str, str] = {}
+            # scores: dict[str, int] = {}
+            # for index, key in enumerate(active_player.scores.keys()):
+            #     opt_key = str(index + 1)
+            #     slot = active_player.scores[key]
+            #     if slot.is_scorable():
+            #         opts[opt_key] = key
+            #         scores[opt_key] = slot.get_score(dice_values)
+            #         options.append(f'{opt_key}: {slot} ({scores[opt_key]})')
+            #     else:
+            #         options.append(f'   {slot} {slot.points}')
+            # while not scored:
+            #     opts = {str(index + 1): key for index, key in enumerate(active_player.scores.keys()) if active_player.scores[key].is_scorable()}
+            #     self._print_rows(
+            #         self._header(
+            #             f'Tur {turn_count}: {active_player.name}',
+            #             'Poängsättning'
+            #         ),
+            #         notification,
+            #         f'Tärningar: {" ".join(map(str,[die.points for die in dice.values()]))}',
+            #         *options
+            #     )
+            #     notification = None
+            #     opt = input('>>> ')
+            #     if opt in opts.keys():
+            #         slot_key = opts[opt]
+            #         score = scores[opt]
+            #         scored = active_player.scores[slot_key].points = score
+            #         if scored and issubclass(active_player.scores[slot_key].__class__, Upper):
+            #             upper_scores = [active_player.scores[key].points for key in active_player.scores.keys() if issubclass(active_player.scores[key].__class__, Upper)]
+            #             active_player.scores['bonus'].verify(upper_scores)
+            #     else:
+            #         notification = 'Ogiltigt kommando'
             
             active_player_index = (active_player_index + 1) % len(self.players)
             active_player = self.players[active_player_index]
@@ -512,6 +518,51 @@ class Game:
                     return
                 else:
                     print('Ogiltigt kommando')
+    
+    def _score_points(
+            self,
+            player: Player,
+            dice_values: list[int],
+            turn: int
+    ) -> None:
+        options: list[str] = []
+        opts: dict[str, str] = {}
+        scores: dict[str, int] = {}
+        for index, key in enumerate(player.scores.keys()):
+            opt_key = str(index + 1)
+            slot = player.scores[key]
+            if slot.is_scorable():
+                opts[opt_key] = key
+                scores[opt_key] = slot.get_score(dice_values)
+                options.append(f'{opt_key}: {slot} ({scores[opt_key]})')
+            else:
+                options.append(f'   {slot} {slot.points}')
+        
+        notification = None
+        scored = False
+        while not scored:
+            opts = {str(index + 1): key for index, key in enumerate(player.scores.keys()) if player.scores[key].is_scorable()}
+            self._print_rows(
+                self._header(
+                    f'Tur {turn}: {player.name}',
+                    'Poängsättning'
+                ),
+                notification,
+                f'Tärningar: {" ".join(map(str,[die for die in dice_values]))}',
+                *options
+            )
+            notification = None
+            opt = input('>>> ')
+            if opt in opts.keys():
+                slot_key = opts[opt]
+                score = scores[opt]
+                scored = player.scores[slot_key].points = score
+                if scored and issubclass(player.scores[slot_key].__class__, Upper):
+                    upper_scores = [player.scores[key].points for key in player.scores.keys() if issubclass(player.scores[key].__class__, Upper)]
+                    player.scores['bonus'].verify(upper_scores)
+            else:
+                notification = 'Ogiltigt kommando'
+        return
     
     def _print_rows(self, *rows: str) -> None:
         self._new_screen()
