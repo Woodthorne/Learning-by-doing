@@ -318,108 +318,144 @@ class Game:
         self._ui = Interface()
     
     def run(self) -> None:
-        description = ''
-        self._ui.print_menu(
-            header = 'YATZY',
-            description = description,
-            options = ['Nytt spel'],
-            escape = 'Avsluta'
-        )
-        description = ''
-        opt = input('>>> ')
-        match opt:
-            case '0':
+        notification = None
+        while True:
+            self._print_rows(
+                self._header('Huvudmeny'),
+                notification,
+                '1. Nytt spel',
+                '0. Avsluta'
+            )
+            # self._ui.print_menu(
+            #     header = 'YATZY',
+            #     description = notification,
+            #     options = ['Nytt spel'],
+            #     escape = 'Avsluta'
+            # )
+            notification = ''
+            opt = input('>>> ')
+            if opt == '0':
                 quit()
-            case '1':
+            elif opt == '1':
                 self._setup_game()
-            case _:
-                description = 'Ogiltigt kommando'
+            else:
+                notification = 'Ogiltigt kommando'
 
     def _setup_game(self) -> None:
-        description = ''
-        options = ['Lägg till spelare']
+        notification = None
+        # options = ['Lägg till spelare']
         while True:
-            if len(self.players) != 0:
-                listing = [player.name for player in self.players]
-                for command in ['Ta bort spelare', 'Börja spelet']:
-                    if command not in options:
-                        options.append(command)
-            else:
-                listing = None
-                for command in ['Ta bort spelare', 'Börja spelet']:
-                    if command in options:
-                        options.remove(command)
-            self._ui.print_menu(
-                header = 'Starta nytt spel',
-                description = description,
-                listing = listing,
-                options = options,
-                escape = 'Tillbaka till huvudmeny'
+            self._print_rows(
+                self._header('Nytt spel'),
+                notification,
+                'Spelare:' if (self.players) else None,
+                *[f' - {player.name}' for player in self.players],
+                '1. Lägg till spelare',
+                '2. Ta bort spelare' if len(self.players) != 0 else None,
+                '3. Börja spelet' if len(self.players) != 0 else None,
+                '0. Tillbaka till huvudmeny'
             )
-            description = ''
+            # if len(self.players) != 0:
+            #     listing = [player.name for player in self.players]
+            #     for command in ['Ta bort spelare', 'Börja spelet']:
+            #         if command not in options:
+            #             options.append(command)
+            # else:
+            #     listing = None
+            #     for command in ['Ta bort spelare', 'Börja spelet']:
+            #         if command in options:
+            #             options.remove(command)
+            # self._ui.print_menu(
+            #     header = 'Starta nytt spel',
+            #     description = notification,
+            #     listing = listing,
+            #     options = options,
+            #     escape = 'Tillbaka till huvudmeny'
+            # )
+            notification = None
             opt = input('>>> ')
-            match opt:
-                case '0':
-                    return
-                case '1':
-                    self._add_player()
-                case '2':
-                    if len(self.players) == 0:
-                        description = 'Ogiltigt kommando'
-                    else:
-                        self._remove_player()
-                case '3':
-                    if len(self.players) == 0:
-                        description = 'Ogiltigt kommando'
-                    else:
-                        self._play_game()
-                        return
-                case _:
-                    description = 'Ogiltigt kommando'
+            if opt == '0':
+                self.players = []
+                return
+            elif opt == '1':
+                self._add_player()
+            elif opt == '2' and len(self.players) != 0:
+                self._remove_player()
+            elif opt == '3' and len(self.players) != 0:
+                self._play_game()
+                return
+            else:
+                notification = 'Ogiltigt kommando'
     
     def _add_player(self) -> None:
+        notification = None
         while True:
-            self._ui.print_menu(
-                header = 'Lägg till spelare',
-                listing = [
-                    'Skriv namn på spelare',
-                    '0. Tillbaka till nytt spel'
-                ]
+            self._print_rows(
+                self._header(
+                    'Nytt spel',
+                    'Lägg till spelare'
+                ),
+                notification,
+                'Skriv namn på spelare',
+                '0. Avbryt'
             )
+            # self._ui.print_menu(
+            #     header = 'Lägg till spelare',
+            #     listing = [
+            #         'Skriv namn på spelare',
+            #         '0. Tillbaka till nytt spel'
+            #     ]
+            # )
+            notification = None
             opt = input('>>> ')
-            match opt:
-                case '0':
-                    return
-                case _:
-                    while True:
-                        confirm = input(f'Använd spelarnamn {opt}? (j/n)').lower()
-                        match confirm:
-                            case 'j':
-                                self.players.append(Player(opt))
-                                return
-                            case 'n':
-                                break
-                            case _:
-                                print('Ogiltigt kommando')
+            if opt == '0':
+                return
+            else:
+                if opt in [player.name for player in self.players]:
+                    notification = 'Namn upptaget'
+                    continue
+                while True:
+                    confirm = input(f'Använd spelarnamn {opt}? (j/n)').lower()
+                    if confirm == 'j':
+                        self.players.append(Player(opt))
+                        return
+                    elif confirm == 'n':
+                        break
+                    else:
+                        print('Ogiltigt kommando')
 
     def _remove_player(self) -> None:
-        description = ''
+        notification = None
         while True:
-            self._ui.print_menu(
-                header = 'Ta bort spelare',
-                description = description + 'Välj spelare att ta bort',
-                options = [player.name for player in self.players],
-                escape = 'Tillbaka till nytt spel' 
+            self._print_rows(
+                self._header(
+                    'Nytt spel',
+                    'Ta bort spelare'
+                ),
+                notification,
+                [player.name for player in self.players],
+                'Skriv namn på spelaren du vill ta bort',
+                '0. Avbryt'
             )
+            # self._ui.print_menu(
+            #     header = 'Ta bort spelare',
+            #     description = notification + 'Välj spelare att ta bort',
+            #     options = [player.name for player in self.players],
+            #     escape = 'Tillbaka till nytt spel' 
+            # )
+            notification = None
             opt = input('>>> ')
-            match opt:
-                case '0':
-                    return
-                case _:
-                    if opt in [str(index + 1) for index in range(len(self.players))]:
-                        self.players.pop(int(opt) - 1)
+            if opt == '0':
+                return
+            elif opt in [player.name for player in self.players]:
+                for index, player in enumerate(self.players):
+                    if player.name == opt:
+                        self.players.pop(index)
                         if len(self.players) == 0:
                             return
+                        break
+            else:
+                notification = 'Ingen spelare har det namnet'
 
     def _play_game(self) -> None:
         random.shuffle(self.players)
@@ -436,84 +472,120 @@ class Game:
             for die in dice.values():
                 die.roll()
             rolls = 1
+            notification = None
             while rolls < 3:
-                header = f'Tur {turn_count}: {active_player.name}'
-                listing = []
-                for char, die in dice.items():
-                    row = f'{char}. {die.value}'
-                    if die.is_locked:
-                        row += ' - låst'
-                    listing.append(row)
-                description = 'Välj tärning att låsa eller låsa upp innan nästa tärningsslag.'
-                self._ui.print_menu(
-                    header = header + f' - Slag {rolls}/3',
-                    description = description,
-                    listing = listing,
-                    options = ['Slå tärningarna'],
-                    escape = 'Spara resultat' 
+                self._print_rows(
+                    self._header(
+                        f'Tur {turn_count}: {active_player.name}',
+                        f'Slag {rolls}/3'
+                    ),
+                    notification,
+                    'Välj tärning att låsa eller låsa upp innan nästa tärningsslag',
+                    *[f'{key}: {die.value} - låst' if dice[key].is_locked else f'{key}: {die.value}' for key, die in dice.items() ],
+                    '1. Slå olåsta tärningarna',
+                    '0. Gå till poängsättning'
                 )
+                # header = f'Tur {turn_count}: {active_player.name}'
+                # listing = []
+                # for char, die in dice.items():
+                #     row = f'{char}. {die.value}'
+                #     if die.is_locked:
+                #         row += ' - låst'
+                #     listing.append(row)
+                # description = 'Välj tärning att låsa eller låsa upp innan nästa tärningsslag.'
+                # self._ui.print_menu(
+                #     header = header + f' - Slag {rolls}/3',
+                #     description = description,
+                #     listing = listing,
+                #     options = ['Slå tärningarna'],
+                #     escape = 'Spara resultat' 
+                # )
+                notification = None
                 opt = input('>>> ').lower()
-                match opt:
-                    case '0':
-                        break
-                    case '1':
-                        for die in dice.values():
-                            die.roll()
-                        rolls += 1
-                    case _:
-                        if opt in dice.keys():
-                            dice[opt].toggle_lock()
+                if opt == '0':
+                    break
+                elif opt == '1':
+                    for die in dice.values():
+                        die.roll()
+                    rolls += 1
+                elif opt in dice.keys():
+                    dice[opt].toggle_lock()
+                else:
+                    notification = 'Ogiltigt kommando'
             
             # Player chooses how to score
             scored = False
+            notification = None
             while not scored:
-                dice_values = [die.value for die in dice.values()]
-                description = 'Tärningar:'
-                for num in dice_values:
-                    description += f' {num}'
-                options = []
-                opts = []
-                for slot_key in active_player.scores.keys():
-                    slot = active_player.scores[slot_key]
-                    if slot.is_scorable():
-                        options.append(str(slot))
-                        opts.append(slot_key)
-                self._ui.print_menu(
-                    header = header + ' - Poängsättning',
-                    description = description,
-                    options = options,
-                    escape = 'Stryk ruta istället'
+                # dice_values = [die.value for die in dice.values()]
+                opts = [key for key in active_player.scores.keys() if active_player.scores[key].is_scorable()]
+                self._print_rows(
+                    self._header(
+                        f'Tur {turn_count}: {active_player.name}',
+                        'Poängsättning'
+                    ),
+                    notification,
+                    f'Tärningar: {" ".join(map(str,[die.value for die in dice.values()]))}',
+                    *[f'{index + 1}: {active_player.scores[key]}' for index, key in enumerate(opts)],
+                    '0: Stryk ruta istället'
                 )
+                # description = 'Tärningar:'
+                # for num in dice_values:
+                #     description += f' {num}'
+                # options = []
+                # opts = []
+                # for slot_key in active_player.scores.keys():
+                #     slot = active_player.scores[slot_key]
+                #     if slot.is_scorable():
+                #         options.append(str(slot))
+                #         opts.append(slot_key)
+                # self._ui.print_menu(
+                #     header = header + ' - Poängsättning',
+                #     description = description,
+                #     options = options,
+                #     escape = 'Stryk ruta istället'
+                # )
+                notification = None
                 opt = input('>>> ')
-                match opt:
-                    case '0':
-                        options = []
-                        opts = []
-                        for slot_key in active_player.scores.keys():
-                            slot = active_player.scores[slot_key]
-                            if slot.is_scorable():
-                                options.append(str(slot))
-                                opts.append(slot_key)
-                        self._ui.print_menu(
-                            header = header + ' - Stryk ruta',
-                            options = options,
-                            escape = 'Fyll i poäng istället'
+                if opt == '0':
+                    while not scored:
+                        self._print_rows(
+                            self._header(
+                                f'Tur {turn_count}: {active_player.name}'
+                                'Stryk ruta'
+                            ),
+                            notification,
+                            f'Tärningar: {" ".join(map(str,[die.value for die in dice.values()]))}',
+                            *[f'{index + 1}: {active_player.scores[key]}' for index, key in enumerate(opts) ],
+                            '0: Fyll i poäng istället'
                         )
+                        # options = []
+                        # opts = []
+                        # for slot_key in active_player.scores.keys():
+                        #     slot = active_player.scores[slot_key]
+                        #     if slot.is_scorable():
+                        #         options.append(str(slot))
+                        #         opts.append(slot_key)
+                        # self._ui.print_menu(
+                        #     header = header + ' - Stryk ruta',
+                        #     options = options,
+                        #     escape = 'Fyll i poäng istället'
+                        # )
+                        notification = None
                         opt = input('>>> ')
-                        match opt:
-                            case '0':
-                                continue
-                            case _:
-                                if opt.isnumeric():
-                                    if 0 <= int(opt) - 1 < len(opts):
-                                        opt_index = int(opt) - 1
-                                        scored = active_player.scores[opts[opt_index]].block()
-                    case _:
-                        if opt.isnumeric():
-                            if 0 <= int(opt) - 1 < len(opts):
-                                opt_index = int(opt) - 1
-                                dice_values = [die.value for die in dice.values()]
-                                scored = active_player.scores[opts[opt_index]].score(dice_values)
+                        if opt == '0':
+                            break
+                        elif opt.isnumeric() and 0 <= int(opt) - 1 < len(opts):
+                            opt_index = int(opt) - 1
+                            scored = active_player.scores[opts[opt_index]].block()
+                        if not scored:
+                            notification = 'Ogiltigt kommando'
+                elif opt.isnumeric() and 0 <= int(opt) - 1 < len(opts):
+                    opt_index = int(opt) - 1
+                    dice_values = [die.value for die in dice.values()]
+                    scored = active_player.scores[opts[opt_index]].score(dice_values)
+                else:
+                    notification = 'Ogiltigt kommando'
             
             active_player_index = (active_player_index + 1) % len(self.players)
             active_player = self.players[active_player_index]
@@ -522,17 +594,48 @@ class Game:
         self.players.sort(key = lambda x: x.total_score())
         winner = self.players[-1]
         while True:
-            self._ui.print_menu(
-                header = 'Spelet är slut',
-                description = f'{winner.name} har vunnit spelet med {winner.total_score()}',
-                listing = [f'{player.name}: {player.total_score()}' for player in self.players],
-                escape = 'Tillbaka till huvumenyn'
+            self._print_rows(
+                self._header('Spelslut'),
+                f'{winner.name} har vunnit spelet med {winner.total_score()}',
+                '### Slutranking ###',
+                *[f'{index + 1} - {player.name}: {player.total_score()}' for index, player in enumerate(self.players)],
+                '0: Tillbaka till huvudmenyn'
             )
-            opt = input('>>> ')
-            match opt:
-                case '0':
+            # self._ui.print_menu(
+            #     header = 'Spelet är slut',
+            #     description = f'{winner.name} har vunnit spelet med {winner.total_score()}',
+            #     listing = [f'{player.name}: {player.total_score()}' for player in self.players],
+            #     escape = 'Tillbaka till huvudmenyn'
+            # )
+            while True:
+                opt = input('>>> ')
+                if opt == '0':
                     return
+                else:
+                    print('Ogiltigt kommando')
 
+    
+    def _print_rows(self, *rows: str) -> None:
+        self._new_screen()
+        for row in rows:
+            if row != None:
+                print(row)
+
+    def _header(self, *messages: str) -> str:
+        header = '### YATZY'
+        for message in messages:
+            header += f' - {message}'
+        header += ' ###'
+        return header
+    
+    def _new_screen(self):
+        '''
+        Clears the screen, for windows and unix
+        '''
+        if os.name == 'nt':
+            os.system('cls')
+        else:
+            os.system('clear')
 
 class Interface:
     def print_menu(
