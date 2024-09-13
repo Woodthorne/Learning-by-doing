@@ -424,14 +424,19 @@ class Game:
     def _play_game(self) -> None:
         random.shuffle(self.players)
         turn_count = 0
-        active_player_index = 0
-        active_player = self.players[active_player_index]
+        active_player_index = -1
+
+        # New player Turn
         while not active_player.is_done():
+            active_player_index = (active_player_index + 1) % len(self.players)
+            active_player = self.players[active_player_index]
             turn_count += 1
             dice = {char: Die() for char in string.ascii_lowercase[:5]}
             for die in dice.values():
                 die.roll()
             rolls = 1
+
+            # Player rolls dice
             while rolls < 3:
                 header = f'Tur {turn_count}: {active_player.name}'
                 listing = []
@@ -459,6 +464,8 @@ class Game:
                     case _:
                         if opt in dice.keys():
                             dice[opt].toggle_lock()
+            
+            # Player chooses how to score
             scored = False
             while not scored:
                 options = []
@@ -496,15 +503,16 @@ class Game:
                             case _:
                                 if opt.isnumeric():
                                     if 0 <= int(opt) - 1 < len(opts):
-                                        scored = active_player.scores[opts[int(opt) - 1]].block()
+                                        opt_index = int(opt) - 1
+                                        scored = active_player.scores[opts[opt_index]].block()
                     case _:
                         if opt.isnumeric():
                             if 0 <= int(opt) - 1 < len(opts):
+                                opt_index = int(opt) - 1
                                 dice_values = [die.value for die in dice.values()]
-                                scored = active_player.scores[opts[int(opt) - 1]].score(dice_values)
-            active_player_index = (active_player_index + 1) % len(self.players)
-            active_player = self.players[active_player_index]
+                                scored = active_player.scores[opts[opt_index]].score(dice_values)
         
+        # Game end
         self.players.sort(key = lambda x: x.total_score())
         winner = self.players[-1]
         while True:
