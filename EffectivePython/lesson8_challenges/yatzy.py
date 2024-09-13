@@ -22,11 +22,10 @@ class Slot:
     def block(self) -> bool:
         if self.is_blocked:
             return False
-        else:
-            self._is_blocked = True
-            return True
+        self._is_blocked = True
+        return True
     
-    def score(self, dice: list[int]) -> bool:
+    def score(self, dice_values: list[int]) -> bool:
         # Logic for verifying scoring
         return False
     
@@ -42,9 +41,9 @@ class Slot:
 
 
 class Upper(Slot):
-    def score(self, dice: list[int], target: int) -> bool:
+    def score(self, dice_values: list[int], target: int) -> bool:
         if self.value == 0 and not self.is_blocked:
-            total = sum(die for die in dice if die == target)
+            total = sum(die for die in dice_values if die == target)
             if total > 0:
                 self._value = total
                 return True
@@ -52,9 +51,9 @@ class Upper(Slot):
 
 
 class Matching(Slot):
-    def score(self, dice: list[int], matches: int) -> bool:
+    def score(self, dice_values: list[int], matches: int) -> bool:
         if self.value == 0 and not self.is_blocked:
-            sorted_dice = sorted(dice, reverse = True)
+            sorted_dice = sorted(dice_values, reverse = True)
             for index in range(matches - 1, len(sorted_dice)):
                 checking_dice = [sorted_dice[index - shift] for shift in range(matches)]
                 valid = True
@@ -69,58 +68,58 @@ class Matching(Slot):
 
 
 class Straight(Slot):
-    def score(self, dice: list[int], target_dice: list) -> bool:
+    def score(self, dice_values: list[int], target_dice: list) -> bool:
         if self.value == 0 and not self.is_blocked:
-            sorted_dice = sorted(dice)
+            sorted_dice = sorted(dice_values)
             if sorted_dice == target_dice:
-                self._value = sum(dice)
+                self._value = sum(dice_values)
                 return True
         return False
 
 
 class Ones(Upper):
-    def score(self, dice: list[int]) -> bool:
-        return super().score(dice, target = 1)
+    def score(self, dice_values: list[int]) -> bool:
+        return super().score(dice_values, target = 1)
     
     def __str__(self) -> str:
         return 'Ettor'
 
 
 class Twos(Upper):
-    def score(self, dice: list[int]) -> bool:
-        return super().score(dice, target = 2)
+    def score(self, dice_values: list[int]) -> bool:
+        return super().score(dice_values, target = 2)
     
     def __str__(self) -> str:
         return 'Tvåor'
 
 
 class Threes(Upper):
-    def score(self, dice: list[int]) -> bool:
-        return super().score(dice, target = 3)
+    def score(self, dice_values: list[int]) -> bool:
+        return super().score(dice_values, target = 3)
     
     def __str__(self) -> str:
         return 'Treor'
 
 
 class Fours(Upper):
-    def score(self, dice: list[int]) -> bool:
-        return super().score(dice, target = 4)
+    def score(self, dice_values: list[int]) -> bool:
+        return super().score(dice_values, target = 4)
     
     def __str__(self) -> str:
         return 'Fyror'
 
 
 class Fives(Upper):
-    def score(self, dice: list[int]) -> bool:
-        return super().score(dice, target = 5)
+    def score(self, dice_values: list[int]) -> bool:
+        return super().score(dice_values, target = 5)
     
     def __str__(self) -> str:
         return 'Femmor'
 
 
 class Sixes(Upper):
-    def score(self, dice: list[int]) -> bool:
-        return super().score(dice, target = 6)
+    def score(self, dice_values: list[int]) -> bool:
+        return super().score(dice_values, target = 6)
     
     def __str__(self) -> str:
         return 'Sexor'
@@ -143,17 +142,17 @@ class Bonus(Slot):
 
 
 class Pair(Matching):
-    def score(self, dice: list[int]) -> bool:
-        return super().score(dice, matches = 2)
+    def score(self, dice_values: list[int]) -> bool:
+        return super().score(dice_values, matches = 2)
     
     def __str__(self) -> str:
         return 'Par'
 
 
 class Pairs(Slot):
-    def score(self, dice: list[int]) -> bool:
+    def score(self, dice_values: list[int]) -> bool:
         if self.value == 0 and not self.is_blocked:
-            sorted_dice = sorted(dice, reverse = True)
+            sorted_dice = sorted(dice_values, reverse = True)
             scored = None
             score_1 = None
             score_2 = None
@@ -176,41 +175,41 @@ class Pairs(Slot):
 
 
 class Triple(Matching):
-    def score(self, dice: list[int]) -> bool:
-        return super().score(dice, matches = 3)
+    def score(self, dice_values: list[int]) -> bool:
+        return super().score(dice_values, matches = 3)
     
     def __str__(self) -> str:
         return 'Tretal'
 
 
 class Quadruple(Matching):
-    def score(self, dice: list[int]) -> bool:
-        return super().score(dice, matches = 4)
+    def score(self, dice_values: list[int]) -> bool:
+        return super().score(dice_values, matches = 4)
     
     def __str__(self) -> str:
         return 'Fyrtal'
 
 
 class StraightSmall(Straight):
-    def score(self, dice: list[int]) -> bool:
-        return super().score(dice, target_dice = [1, 2, 3, 4, 5])
+    def score(self, dice_values: list[int]) -> bool:
+        return super().score(dice_values, target_dice = [1, 2, 3, 4, 5])
     
     def __str__(self) -> str:
         return 'Liten stege'
 
 
 class StraightLarge(Straight):
-    def score(self, dice: list[int]) -> bool:
-        return super().score(dice, target_dice = [2, 3, 4, 5, 6])
+    def score(self, dice_values: list[int]) -> bool:
+        return super().score(dice_values, target_dice = [2, 3, 4, 5, 6])
     
     def __str__(self) -> str:
         return 'Stor stege'
 
 
 class House(Slot):
-    def score(self, dice: list[int]) -> bool:
+    def score(self, dice_values: list[int]) -> bool:
         if self.value == 0 and not self.is_blocked:
-            sorted_dice = sorted(dice, reverse = True)
+            sorted_dice = sorted(dice_values, reverse = True)
             biggest = sorted_dice[0]
             smallest = sorted_dice[1]
 
@@ -222,8 +221,8 @@ class House(Slot):
                 if sorted_dice[len(sorted_dice) - 1 - index] == smallest:
                     small_count += 1
             
-            if set(big_count, small_count) == set(2, 3):
-                self._value = sum(dice)
+            if {big_count, small_count} == {2, 3}:
+                self._value = sum(dice_values)
                 return True
         return False
     
@@ -232,9 +231,9 @@ class House(Slot):
 
 
 class Chance(Slot):
-    def score(self, dice: list[int]) -> bool:
+    def score(self, dice_values: list[int]) -> bool:
         if self.value == 0 and not self.is_blocked:
-            self._value = sum(dice)
+            self._value = sum(dice_values)
             return True
         return False
     
@@ -243,8 +242,8 @@ class Chance(Slot):
 
 
 class Yatzy(Matching):
-    def score(self, dice: list[int]) -> bool:
-        if super().score(dice, matches = 5):
+    def score(self, dice_values: list[int]) -> bool:
+        if super().score(dice_values, matches = 5):
             self._value = 50
             return True
         return False
@@ -290,6 +289,27 @@ class Player:
             if slot.is_blocked or slot.value == 0:
                 return False
         return True
+
+
+class Die:
+    def __init__(self) -> None:
+        self._value = None
+        self._is_locked = False
+    
+    @property
+    def value(self) -> int|None:
+        return self._value
+    
+    @property
+    def is_locked(self) -> bool:
+        return self._is_locked
+
+    def roll(self) -> None:
+        if not self.is_locked:
+            self._value = random.randint(1, 6)
+    
+    def toggle_lock(self) -> None:
+        self._is_locked = not self._is_locked
 
 
 class Game:
@@ -407,16 +427,17 @@ class Game:
         active_player_index = 0
         active_player = self.players[active_player_index]
         while not active_player.is_done():
-            dice = [random.randint(1, 6) for _ in range(5)]
-            saved_indexes = set()
             turn_count += 1
+            dice = {char: Die() for char in string.ascii_lowercase[:5]}
+            for die in dice.values():
+                die.roll()
             rolls = 1
             while rolls < 3:
                 header = f'Tur {turn_count}: {active_player.name}'
                 listing = []
-                for index, die in enumerate(dice):
-                    row = string.ascii_lowercase[index] + ' ' + str(die)
-                    if index in saved_indexes:
+                for char, die in dice.items():
+                    row = f'{char}. {die.value}'
+                    if die.is_locked:
                         row += ' - låst'
                     listing.append(row)
                 description = 'Välj tärning att låsa eller låsa upp innan nästa tärningsslag.'
@@ -432,17 +453,12 @@ class Game:
                     case '0':
                         break
                     case '1':
-                        for index in range(len(dice)):
-                            if index not in saved_indexes:
-                                dice[index] = random.randint(1, 6)
+                        for die in dice.values():
+                            die.roll()
                         rolls += 1
                     case _:
-                        if opt in string.ascii_lowercase[:5]:
-                            index = string.ascii_lowercase.index(opt)
-                            if index in saved_indexes:
-                                saved_indexes.remove(index)
-                            else:
-                                saved_indexes.add(index)
+                        if opt in dice.keys():
+                            dice[opt].toggle_lock()
             scored = False
             while not scored:
                 options = []
@@ -454,7 +470,7 @@ class Game:
                         opts.append(slot_key)
                 self._ui.print_menu(
                     header = header + ' - Poängsättning',
-                    listing = [str(die) for die in dice],
+                    listing = [str(die.value) for die in dice.values()],
                     options = options,
                     escape = 'Stryk ruta istället'
                 )
@@ -484,7 +500,8 @@ class Game:
                     case _:
                         if opt.isnumeric():
                             if 0 <= int(opt) - 1 < len(opts):
-                                scored = active_player.scores[opts[int(opt) - 1]].score(dice)
+                                dice_values = [die.value for die in dice.values()]
+                                scored = active_player.scores[opts[int(opt) - 1]].score(dice_values)
             active_player_index = (active_player_index + 1) % len(self.players)
             active_player = self.players[active_player_index]
         
