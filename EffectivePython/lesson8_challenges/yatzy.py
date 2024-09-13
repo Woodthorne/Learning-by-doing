@@ -14,9 +14,18 @@ class Slot:
         else:
             return self._points
     
-    def score(self, dice_values: list[int]) -> bool:
-        # Logic for verifying scoring
+    @points.setter
+    def points(self, new_value: int) -> bool:
+        if self.is_scorable():
+            self._points = new_value
+            return True
         return False
+    
+    def get_score(self, dice_values: list[int]) -> int|None:
+        # Logic for verifying scoring
+        if self.is_scorable():
+            return 0
+        return None
     
     def is_scorable(self) -> bool:
         if self._points == None:
@@ -28,17 +37,14 @@ class Slot:
 
 
 class Upper(Slot):
-    def score(self, dice_values: list[int], target: int) -> bool:
+    def get_score(self, dice_values: list[int], target: int) -> bool:
         if self.is_scorable():
-            total = sum(die for die in dice_values if die == target)
-            if total > 0:
-                self._points = total
-                return True
-        return False
+            return sum(die for die in dice_values if die == target)
+        return None
 
 
 class Matching(Slot):
-    def score(self, dice_values: list[int], matches: int) -> bool:
+    def get_score(self, dice_values: list[int], matches: int) -> bool:
         if self.is_scorable():
             sorted_dice = sorted(dice_values, reverse = True)
             for index in range(matches - 1, len(sorted_dice)):
@@ -49,64 +55,64 @@ class Matching(Slot):
                         valid = False
                         break
                 if valid:
-                    self._points = sum(checking_dice)
-                    return True
-        return False
+                    return sum(checking_dice)
+            return 0
+        return None
 
 
 class Straight(Slot):
-    def score(self, dice_values: list[int], target_dice: list) -> bool:
+    def get_score(self, dice_values: list[int], target_dice: list) -> bool:
         if self.is_scorable():
             sorted_dice = sorted(dice_values)
             if sorted_dice == target_dice:
-                self._points = sum(dice_values)
-                return True
-        return False
+                return sum(dice_values)
+            return 0
+        return None
 
 
 class Ones(Upper):
-    def score(self, dice_values: list[int]) -> bool:
-        return super().score(dice_values, target = 1)
+    def get_score(self, dice_values: list[int]) -> bool:
+        return super().get_score(dice_values, target = 1)
     
     def __str__(self) -> str:
         return 'Ettor'
 
 
 class Twos(Upper):
-    def score(self, dice_values: list[int]) -> bool:
-        return super().score(dice_values, target = 2)
+    def get_score(self, dice_values: list[int]) -> bool:
+        return super().get_score(dice_values, target = 2)
     
     def __str__(self) -> str:
         return 'Tvåor'
 
 
 class Threes(Upper):
-    def score(self, dice_values: list[int]) -> bool:
-        return super().score(dice_values, target = 3)
+    def get_score(self, dice_values: list[int]) -> bool:
+        return super().get_score(dice_values, target = 3)
     
     def __str__(self) -> str:
         return 'Treor'
 
 
 class Fours(Upper):
-    def score(self, dice_values: list[int]) -> bool:
-        return super().score(dice_values, target = 4)
+    def get_score(self, dice_values: list[int]) -> bool:
+        return super().get_score(dice_values, target = 4)
     
     def __str__(self) -> str:
         return 'Fyror'
 
 
 class Fives(Upper):
-    def score(self, dice_values: list[int]) -> bool:
-        return super().score(dice_values, target = 5)
+    def get_score(self, dice_values: list[int]) -> bool:
+        return super().get_score(dice_values, target = 5)
     
     def __str__(self) -> str:
         return 'Femmor'
 
 
 class Sixes(Upper):
-    def score(self, dice_values: list[int]) -> bool:
-        return super().score(dice_values, target = 6)
+    def get_score(self, dice_values: list[int]) -> bool:
+        return super().get_score(dice_values, target = 6)
     
     def __str__(self) -> str:
         return 'Sexor'
@@ -120,31 +126,29 @@ class Bonus(Slot):
         else:
             return self._points
 
-    def verify(self, upper_scores: list[int]) -> bool:
-        if self.is_scorable():
+    def verify(self, upper_scores: list[int]) -> None:
+        if self._points == None:
             total_upper = sum(upper_scores)
             if total_upper >= 63:
                 self._points = 50
-                return True
-        return False
     
     def is_scorable(self) -> bool:
-        return False
+        return None
 
     def __str__(self) -> str:
         return 'Bonus'
 
 
 class Pair(Matching):
-    def score(self, dice_values: list[int]) -> bool:
-        return super().score(dice_values, matches = 2)
+    def get_score(self, dice_values: list[int]) -> bool:
+        return super().get_score(dice_values, matches = 2)
     
     def __str__(self) -> str:
         return 'Par'
 
 
 class Pairs(Slot):
-    def score(self, dice_values: list[int]) -> bool:
+    def get_score(self, dice_values: list[int]) -> bool:
         if self.is_scorable():
             sorted_dice = sorted(dice_values, reverse = True)
             scored = None
@@ -160,48 +164,48 @@ class Pairs(Slot):
                     elif index not in scored and index - 1 not in scored:
                         score_2 = die_1 + die_2
             if score_1 and score_2:
-                self._points = score_1 + score_2
-                return True
-        return False
+                return score_1 + score_2
+            return 0
+        return None
 
     def __str__(self) -> str:
         return 'Två par'
 
 
 class Triple(Matching):
-    def score(self, dice_values: list[int]) -> bool:
-        return super().score(dice_values, matches = 3)
+    def get_score(self, dice_values: list[int]) -> bool:
+        return super().get_score(dice_values, matches = 3)
     
     def __str__(self) -> str:
         return 'Tretal'
 
 
 class Quadruple(Matching):
-    def score(self, dice_values: list[int]) -> bool:
-        return super().score(dice_values, matches = 4)
+    def get_score(self, dice_values: list[int]) -> bool:
+        return super().get_score(dice_values, matches = 4)
     
     def __str__(self) -> str:
         return 'Fyrtal'
 
 
 class StraightSmall(Straight):
-    def score(self, dice_values: list[int]) -> bool:
-        return super().score(dice_values, target_dice = [1, 2, 3, 4, 5])
+    def get_score(self, dice_values: list[int]) -> bool:
+        return super().get_score(dice_values, target_dice = [1, 2, 3, 4, 5])
     
     def __str__(self) -> str:
         return 'Liten stege'
 
 
 class StraightLarge(Straight):
-    def score(self, dice_values: list[int]) -> bool:
-        return super().score(dice_values, target_dice = [2, 3, 4, 5, 6])
+    def get_score(self, dice_values: list[int]) -> bool:
+        return super().get_score(dice_values, target_dice = [2, 3, 4, 5, 6])
     
     def __str__(self) -> str:
         return 'Stor stege'
 
 
 class House(Slot):
-    def score(self, dice_values: list[int]) -> bool:
+    def get_score(self, dice_values: list[int]) -> bool:
         if self.is_scorable():
             sorted_dice = sorted(dice_values, reverse = True)
             biggest = sorted_dice[0]
@@ -216,31 +220,29 @@ class House(Slot):
                     small_count += 1
             
             if {big_count, small_count} == {2, 3}:
-                self._points = sum(dice_values)
-                return True
-        return False
+                return sum(dice_values)
+            return 0
+        return None
     
     def __str__(self) -> str:
         return 'Kåk'
 
 
 class Chance(Slot):
-    def score(self, dice_values: list[int]) -> bool:
+    def get_score(self, dice_values: list[int]) -> bool:
         if self.is_scorable():
-            self._points = sum(dice_values)
-            return True
-        return False
+            return sum(dice_values)
+        return None
     
     def __str__(self) -> str:
         return 'Chans'
 
 
 class Yatzy(Matching):
-    def score(self, dice_values: list[int]) -> bool:
-        if super().score(dice_values, matches = 5):
-            self._points = 50
-            return True
-        return False
+    def get_score(self, dice_values: list[int]) -> bool:
+        if super().get_score(dice_values, matches = 5):
+            return 50
+        return None
     
     def __str__(self) -> str:
         return 'Yatzy'
@@ -249,7 +251,7 @@ class Yatzy(Matching):
 class Player:
     def __init__(self, name: str) -> None:
         self.name = name
-        self.scores = dict(
+        self.scores: dict[str, Slot|Bonus] = dict(
             ones = Ones(),
             twos = Twos(),
             threes = Threes(),
@@ -270,10 +272,10 @@ class Player:
         )
 
     def total_score(self) -> int:
-        score = 0
+        get_score = 0
         for slot in self.scores.values():
-            score += slot.points
-        return score
+            get_score += slot.points
+        return get_score
     
     def is_done(self) -> bool:
         for slot in self.scores.values():
@@ -451,9 +453,22 @@ class Game:
                 else:
                     notification = 'Ogiltigt kommando'
             
-            # Player chooses how to score
+            # Player chooses how to get_score
             scored = False
             notification = None
+            dice_values = [die.points for die in dice.values()]
+            options: list[str] = []
+            opts: dict[str, str] = {}
+            scores: dict[str, int] = {}
+            for index, key in enumerate(active_player.scores.keys()):
+                opt_key = str(index + 1)
+                slot = active_player.scores[key]
+                if slot.is_scorable():
+                    opts[opt_key] = key
+                    scores[opt_key] = slot.get_score(dice_values)
+                    options.append(f'{opt_key}: {slot} ({scores[opt_key]})')
+                else:
+                    options.append(f'   {slot} {slot.points}')
             while not scored:
                 opts = {str(index + 1): key for index, key in enumerate(active_player.scores.keys()) if active_player.scores[key].is_scorable()}
                 self._print_rows(
@@ -463,13 +478,17 @@ class Game:
                     ),
                     notification,
                     f'Tärningar: {" ".join(map(str,[die.points for die in dice.values()]))}',
-                    *[f'{index + 1}: {active_player.scores[slot]}' if slot in opts.values() else f'   {active_player.scores[slot]}: {active_player.scores[slot].points}' for index, slot in enumerate(active_player.scores.keys())]
+                    *options
                 )
                 notification = None
                 opt = input('>>> ')
-                if opt in opts.keys() and active_player.scores[opts[opt]].is_scorable():
-                    dice_values = [die.points for die in dice.values()]
-                    scored = active_player.scores[opts[opt]].score(dice_values)
+                if opt in opts.keys():
+                    slot_key = opts[opt]
+                    score = scores[opt]
+                    scored = active_player.scores[slot_key].points = score
+                    if scored and issubclass(active_player.scores[slot_key].__class__, Upper):
+                        upper_scores = [active_player.scores[key].points for key in active_player.scores.keys() if issubclass(active_player.scores[key].__class__, Upper)]
+                        active_player.scores['bonus'].verify(upper_scores)
                 else:
                     notification = 'Ogiltigt kommando'
             
