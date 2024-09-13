@@ -30,6 +30,13 @@ class Slot:
         # Logic for verifying scoring
         return False
     
+    def is_scorable(self) -> bool:
+        if self.is_blocked:
+            return False
+        if self.value != 0:
+            return False
+        return True
+    
     def __str__(self) -> str:
         return self.__class__.__name__
 
@@ -128,6 +135,9 @@ class Bonus(Slot):
                 return True
         return False
     
+    def is_scorable(self) -> bool:
+        return False
+
     def __str__(self) -> str:
         return 'Bonus'
 
@@ -439,7 +449,7 @@ class Game:
                 opts = []
                 for slot_key in active_player.scores.keys():
                     slot = active_player.scores[slot_key]
-                    if not slot.is_blocked and slot.value == 0 and str(slot) != 'Bonus':
+                    if slot.is_scorable():
                         options.append(str(slot))
                         opts.append(slot_key)
                 self._ui.print_menu(
@@ -451,7 +461,26 @@ class Game:
                 opt = input('>>> ')
                 match opt:
                     case '0':
-                        pass # block slot
+                        options = []
+                        opts = []
+                        for slot_key in active_player.scores.keys():
+                            slot = active_player.scores[slot_key]
+                            if slot.is_scorable():
+                                options.append(str(slot))
+                                opts.append(slot_key)
+                        self._ui.print_menu(
+                            header = header + ' - Stryk ruta',
+                            options = options,
+                            escape = 'Fyll i poäng istället'
+                        )
+                        opt = input('>>> ')
+                        match opt:
+                            case '0':
+                                continue
+                            case _:
+                                if opt.isnumeric():
+                                    if 0 <= int(opt) - 1 < len(opts):
+                                        scored = active_player.scores[opts[int(opt) - 1]].block()
                     case _:
                         if opt.isnumeric():
                             if 0 <= int(opt) - 1 < len(opts):
