@@ -303,6 +303,34 @@ class Die:
     
     def toggle_lock(self) -> None:
         self._is_locked = not self._is_locked
+    
+    def display(self) -> list[str]:
+        rows: list[str] = [' _____ ']
+        
+        if self.points == 1:
+            rows.append('|     |')
+        elif self.points in [2, 3]:
+            rows.append('|*    |')
+        else:
+            rows.append('|*   *|')
+        
+        if self.points in [1, 3, 5]:
+            rows.append('|  *  |')
+        elif self.points in [2, 4]:
+            rows.append('|     |')
+        else:
+            rows.append('|*   *|')
+        
+        if self.points == 1:
+            rows.append('|     |')
+        elif self.points in [2, 3]:
+            rows.append('|    *|')
+        else:
+            rows.append('|*   *|')
+        
+        rows.append(' \u203E\u203E\u203E\u203E\u203E ')
+
+        return rows
 
 
 class Game:
@@ -436,7 +464,7 @@ class Game:
                     ),
                     notification,
                     'Välj tärning att låsa eller låsa upp innan nästa tärningsslag',
-                    *[f'{key}: {die.points} - låst' if dice[key].is_locked else f'{key}: {die.points}' for key, die in dice.items() ],
+                    *self._display_dice([die for die in dice.values()], show_locks = True),
                     '1. Slå olåsta tärningarna',
                     '0. Gå till poängsättning'
                 )
@@ -454,49 +482,11 @@ class Game:
                     notification = 'Ogiltigt kommando'
             
             ### Player chooses how to score points
-            ## Code left commented for time being. Remove when stable.
-            # scored = False
-            # notification = None
-            dice_values = sorted([die.points for die in dice.values()])
             self._score_points(
                 player = active_player,
-                dice_values = dice_values,
+                dice = list(dice.values()),
                 turn = turn_count
             )
-            # options: list[str] = []
-            # opts: dict[str, str] = {}
-            # scores: dict[str, int] = {}
-            # for index, key in enumerate(active_player.scores.keys()):
-            #     opt_key = str(index + 1)
-            #     slot = active_player.scores[key]
-            #     if slot.is_scorable():
-            #         opts[opt_key] = key
-            #         scores[opt_key] = slot.get_score(dice_values)
-            #         options.append(f'{opt_key}: {slot} ({scores[opt_key]})')
-            #     else:
-            #         options.append(f'   {slot} {slot.points}')
-            # while not scored:
-            #     opts = {str(index + 1): key for index, key in enumerate(active_player.scores.keys()) if active_player.scores[key].is_scorable()}
-            #     self._print_rows(
-            #         self._header(
-            #             f'Tur {turn_count}: {active_player.name}',
-            #             'Poängsättning'
-            #         ),
-            #         notification,
-            #         f'Tärningar: {" ".join(map(str,[die.points for die in dice.values()]))}',
-            #         *options
-            #     )
-            #     notification = None
-            #     opt = input('>>> ')
-            #     if opt in opts.keys():
-            #         slot_key = opts[opt]
-            #         score = scores[opt]
-            #         scored = active_player.scores[slot_key].points = score
-            #         if scored and issubclass(active_player.scores[slot_key].__class__, Upper):
-            #             upper_scores = [active_player.scores[key].points for key in active_player.scores.keys() if issubclass(active_player.scores[key].__class__, Upper)]
-            #             active_player.scores['bonus'].verify(upper_scores)
-            #     else:
-            #         notification = 'Ogiltigt kommando'
             
             active_player_index = (active_player_index + 1) % len(self.players)
             active_player = self.players[active_player_index]
@@ -522,9 +512,11 @@ class Game:
     def _score_points(
             self,
             player: Player,
-            dice_values: list[int],
+            dice: list[Die],
             turn: int
     ) -> None:
+        dice.sort(key= lambda die: die.points)
+        dice_values = sorted([die.points for die in dice])
         options: list[str] = []
         opts: dict[str, str] = {}
         scores: dict[str, int] = {}
@@ -548,7 +540,8 @@ class Game:
                     'Poängsättning'
                 ),
                 notification,
-                f'Tärningar: {" ".join(map(str,[die for die in dice_values]))}',
+                *self._display_dice(dice),
+                # f'Tärningar: {" ".join(map(str,[die for die in dice_values]))}',
                 *options
             )
             notification = None
@@ -576,6 +569,15 @@ class Game:
             header += f' - {message}'
         header += ' ###'
         return header
+    
+    def _display_dice(self, dice: list[Die], show_locks = False):
+        dice_rows = zip(*[die.display() for die in dice])
+        dice_rows = ['  '.join(row) for row in dice_rows]
+        dice_rows = [' ' + row for row in dice_rows]
+        dice_rows.insert(0, ''.join([f'    {char}    ' for char in string.ascii_lowercase[:len(dice)]]))
+        if show_locks:
+            dice_rows.append(''.join([f'  låst   ' if die.is_locked else '         ' for die in dice]))
+        return dice_rows
     
     def _new_screen(self):
         '''
