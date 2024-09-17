@@ -20,7 +20,7 @@ class Slot:
         self._score = self.calculate_score(dice_values)
 
     def calculate_score(self, dice_values: list[int]) -> int|None:
-        # Logic for verifying scoring
+        # Logic for calculating possible score
         if self.is_scorable():
             return 0
         return None
