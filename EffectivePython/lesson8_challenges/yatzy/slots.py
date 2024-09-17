@@ -9,13 +9,6 @@ class Slot:
         else:
             return self._score
     
-    @score.setter
-    def score(self, new_value: int) -> bool:
-        if self.is_scorable():
-            self._score = new_value
-            return True
-        return False
-    
     def set_score(self, dice_values: list[int]) -> None:
         self._score = self.calculate_score(dice_values)
 
