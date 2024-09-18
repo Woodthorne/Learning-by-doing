@@ -1,5 +1,5 @@
 from slots import (
-    Slot, Upper, Ones, Twos, Threes, Fours, Fives, Sixes, Bonus, Pair, Pairs,
+    Slot, Ones, Twos, Threes, Fours, Fives, Sixes, Bonus, Pair, Pairs,
     Triple, Quadruple, StraightSmall, StraightLarge, House, Chance, Yatzy
 )
 
@@ -45,46 +45,30 @@ class ScoreTable:
         ]
 
     def verify_bonus(self) -> None:
-        upper_points = [slot.score for slot in self.get_slots() if slot.is_upper()]
-        self._bonus.verify(upper_points)
+        upper_scores = [slot.score for slot in self.get_slots() if slot.is_upper()]
+        self._bonus.verify(upper_scores)
+    
+    def total_score(self) -> int:
+        score = 0
+        for slot in self.get_slots():
+            score += slot.score
+        return score
 
 
 class Player:
     def __init__(self, name: str) -> None:
         self._name = name
         self.table = ScoreTable()
-        self.scores: dict[str, Slot|Bonus] = dict(
-            ones = Ones(),
-            twos = Twos(),
-            threes = Threes(),
-            fours = Fours(),
-            fives = Fives(),
-            sixes = Sixes(),
-            bonus = Bonus(),
-
-            pair = Pair(),
-            pairs = Pairs(),
-            triple = Triple(),
-            quadruple = Quadruple(),
-            straight = StraightSmall(),
-            Straight = StraightLarge(),
-            house = House(),
-            chance = Chance(),
-            yatzy = Yatzy(),
-        )
 
     @property
     def name(self) -> str:
         return self._name
 
     def total_score(self) -> int:
-        get_score = 0
-        for slot in self.scores.values():
-            get_score += slot.score
-        return get_score
+        return self.table.total_score()
     
     def is_done(self) -> bool:
-        for slot in self.scores.values():
+        for slot in self.table.get_slots():
             if slot.is_scorable():
                 return False
         return True
