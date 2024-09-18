@@ -192,7 +192,6 @@ class Interface:
                     turn.player.table.verify_bonus()
             else:
                 notification = 'Ogiltigt kommando'
-        return
     
     def _print_rows(self, *rows: str) -> None:
         self._new_screen()
