@@ -47,4 +47,3 @@ class Die:
         rows.append(' \u203E\u203E\u203E\u203E\u203E ')
 
         return rows
-
