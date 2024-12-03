@@ -32,7 +32,7 @@ grid = [
 ]
 location = 0
 score = 0
-random = iter(quasirandom_percentage(70))
+random = iter(quasirandom_percentage(50))
 for _ in range(1_000):
     for space in grid:
         if next(random):
@@ -41,13 +41,18 @@ for _ in range(1_000):
     percept = tuple(grid[location].values())
     match bot.action(percept):
         case ActionEnum.Suck:
+            print('Cleaning')
             grid[location]['state'] = 'Clean'
         case ActionEnum.Right:
             if location != 1:
+                print('Moving')
                 location = 1
         case ActionEnum.Left:
             if location != 0:
+                print('Moving')
                 location = 0
+        case _:
+            print('Idling')
 
     for space in grid:
         score += len([space for space in grid if space['state'] == 'Clean'])
