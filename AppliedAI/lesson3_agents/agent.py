@@ -1,6 +1,7 @@
-import random
 from enum import Enum
 from typing import Sequence
+
+from tools import quasirandom_percentage
 
 class ActionEnum(Enum):
     Passive = 0
@@ -24,7 +25,6 @@ class VacuumAgent:
             case _:
                 raise ValueError('Unrecognised percept values.')
 
-
 bot = VacuumAgent()
 grid = [
     {'name': 'A', 'state': 'Clean'},
@@ -32,9 +32,10 @@ grid = [
 ]
 location = 0
 score = 0
+random = iter(quasirandom_percentage(70))
 for _ in range(1_000):
     for space in grid:
-        if random.randint(0, 99) < 70:
+        if next(random):
             space['state'] = 'Dirty'
     
     percept = tuple(grid[location].values())
