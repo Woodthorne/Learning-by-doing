@@ -20,7 +20,9 @@ class Environment:
         return {
             "current_cell": self.grid[x][y],
             "battery": self.robot_battery,
-            "has_package": self.robot_has_package
+            "has_package": self.robot_has_package,
+            "x": x,
+            "y": y
         }
 
     def perform_action(self, action):
