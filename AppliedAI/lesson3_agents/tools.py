@@ -46,8 +46,10 @@ def quasirandom_percentage(threshold: int) -> Generator[int, Any, None]:
         15,53,46,54,11,67,39,29,55,28,86,96,55,64,64,50,85,1,47,59,7,53,6,68,
         25,21,4,30
     ]
-    for num in nums:
-        yield num < threshold
-    
-    for result in quasirandom_percentage(threshold):
-        yield result
+
+    index = 0
+    while True:
+        yield nums[index] < threshold
+        index += 1
+        if index == len(nums):
+            index = 0
